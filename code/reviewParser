@@ -1,23 +1,6 @@
-AWS_ACCESS_KEY_ID=AKIAIURA6MI4XESV726Q
-AWS_SECRET_ACCESS_KEY=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
-
-PKGS=edu.stanford.nlp:stanford-corenlp:3.6.0
-PKGS=$PKGS,edu.stanford.nlp:stanford-parser:3.6.0 
-PKGS=$PKGS,com.google.protobuf:protobuf-java:2.6.1
-PKGS=$PKGS,com.datastax.spark:spark-cassandra-connector_2.10:1.6.0
-//PKGS=$PKGS,com.datastax.spark:spark-cassandra-connector_2.10:1.5.0
-//PKGS=$PKGS,com.databricks.spark.corenlp:
-
-spark-shell   --packages $PKGS   --jars ./code/stanford-english-corenlp-2016-01-10-models.jar  --conf "spark.cassandra.connection.host=127.0.0.1"
-spark-shell   --packages $PKGS   --jars stanford-english-corenlp-2016-01-10-models.jar --conf "spark.cassandra.connection.host=127.0.0.1"
-spark-shell   --master local[*] --packages $PKGS   --jars stanford-english-corenlp-2016-01-10-models.jar --conf "spark.cassandra.connection.host=172.31.62.42" 
-spark-shell   --master spark://172.31.59.181:7077 --packages $PKGS   --jars stanford-english-corenlp-2016-01-10-models.jar --conf "spark.cassandra.connection.host=172.31.62.42" 
-spark-shell   --packages $PKGS   --jars stanford-english-corenlp-2016-01-10-models.jar --conf "spark.cassandra.connection.host=172.31.59.181,spark.executor.extraClassPath=./guava-16.0.1.jar"  --files ./guava-16.0.1.jar --driver-class-path ./guava-16.0.1.jar
-spark-shell   --packages $PKGS   --jars stanford-english-corenlp-2016-01-10-models.jar --conf "spark.cassandra.connection.host=172.31.59.181"  --files guava-16.0.1.jar --driver-class-path guava-16.0.1.jar --conf spark.executor.extraClassPath=guava-16.0.1.jar
-spark-shell   --packages $PKGS   --jars stanford-english-corenlp-2016-01-10-models.jar --conf "spark.cassandra.connection.host=172.31.59.181"  --files guava-16.0.1.jar --conf spark.executor.extraClassPath=guava-16.0.1.jar
 
 
-//spark-shell --packages edu.stanford.nlp:stanford-corenlp:3.6.0,com.google.protobuf:protobuf-java:2.6.1 --jars stanford-english-corenlp-2016-01-10-models.jar 
+
 import com.datastax.spark.connector._
 import org.apache.spark.SparkConf
 import java.util._
@@ -43,6 +26,45 @@ val reviews = sample.sample(false,0.0001)
 reviews.cache
 //reviews.show
 
+case class ReviewInfo(score:Int, promoText:String, promoDate:String, promoScore:Int) extends Product with Serializable
+type ReviewCollector = (Int, ReviewInfo)
+type DishScores = (String, (Int, ReviewInfo)) 
+
+val createScoreCombiner = (review: ReviewInfo) => (1, review)
+
+val scoreCombiner = (collector: ReviewCollector, review1: ReviewInfo) => {
+    var promoScore = 0;
+    var promoText = "";
+    var promoDate = "";
+    val (numReviews, (review2)) = collector
+    if (review1.score > review2.score) { promoText = review1.promoText; promoScore = review1.score; promoDate = review1.promoDate; }
+    else { promoText = review2.promoText; promoScore = review2.score; promoDate = review2.promoDate; }
+    
+    val reviewInfoResult = new ReviewInfo(review1.score + review2.score, promoText, promoDate, promoScore)
+    (numReviews + 1, reviewInfoResult)
+}
+
+val scoreMerger = (collector1: ReviewCollector, collector2: ReviewCollector) => {
+      
+    val (numReviews1, (review1)) = collector1
+    val (numReviews2, (review2)) = collector2
+
+    var promoScore = 0;
+    var promoText = "";
+    var promoDate = "";
+
+    if (review1.score > review2.score) { promoText = review1.promoText; promoScore = review1.score; promoDate = review1.promoDate; }
+    else { promoText = review2.promoText; promoScore = review2.score; promoDate = review2.promoDate; }
+
+    val reviewInfoResult = new ReviewInfo(review1.score + review2.score, promoText, promoDate, promoScore)
+    (numReviews1 + numReviews2, reviewInfoResult)
+}   
+
+val averagingFunction = (dishScore: DishScores) => {
+       val (key, (numReviews, reviewInfo)) = dishScore
+       (key, (reviewInfo.score / numReviews), reviewInfo.score, numReviews, reviewInfo.promoText, reviewInfo.promoDate, reviewInfo.promoScore)
+    }
+
 def getScores (reviews: org.apache.spark.sql.DataFrame, items: scala.collection.mutable.Set[String]) = {
   val scores = reviews.mapPartitions( rows => {
   // Create core NLP
@@ -53,9 +75,11 @@ def getScores (reviews: org.apache.spark.sql.DataFrame, items: scala.collection.
   rows.map{ row => {
 
   val review = row.getAs[String]("text")
+  val date = row.getAs[String]("date")
   val doc = new Document(review);
   var item = "";
   var score = -1;
+  var sentenceWithItem = ""
 
   for (sentence <- doc.sentences()) {  
     
@@ -68,6 +92,7 @@ def getScores (reviews: org.apache.spark.sql.DataFrame, items: scala.collection.
 
         if (item != ""){
           //score = getSentiment(sentence.toString)
+          sentenceWithItem = sentence.text
           val scoreArray = coreNLP.process(sentence.toString).
           get(classOf[CoreAnnotations.SentencesAnnotation]).
           map(_.get(classOf[SentimentCoreAnnotations.SentimentAnnotatedTree])).
@@ -76,28 +101,35 @@ def getScores (reviews: org.apache.spark.sql.DataFrame, items: scala.collection.
       }
     }
 
-    (row.getAs[String]("business_id") + "SEPARATOR" + item, score)
-
+    val key = row.getAs[String]("business_id") + "SEPARATOR" + item
+    val reviewInfo = new ReviewInfo(score, sentenceWithItem, date, score)
+    (key, reviewInfo)
     }}
-  }).filter{ case(key, score) => score != -1}	
+  })
 
-  val step1 = scores.aggregateByKey((0.0, 0))((a, b) => (a._1 + b, a._2 + 1), (a, b) => (a._1 + b._1, a._2 + b._2))
-  val avgByKey = step1.mapValues(i => (i._1, i._2, i._1 * 1.0/i._2))
-  val dataToStore = avgByKey.map{ case(key, (total, num, myavg)) => val tokens = key.split("SEPARATOR"); (tokens(0), tokens(1), total, num, myavg, "", 0)}
-  dataToStore
+  val filteredScores = scores.filter{ case(key, reviewInfo) => reviewInfo.score != -1}	
+  val groupedScores = filteredScores.combineByKey(createScoreCombiner, scoreCombiner, scoreMerger)
+
+  val averageScores = groupedScores.map(averagingFunction).
+    map{ case(key, avgscore, totalScore, numReviews, promoText, promoDate, promoScore) => 
+      val tokens = key.split("SEPARATOR"); (tokens(0), tokens(1), avgscore, totalScore, numReviews, promoText, promoScore)
+    }
+
+  //val step1 = scores.aggregateByKey((0.0, 0))((a, b) => (a._1 + b, a._2 + 1), (a, b) => (a._1 + b._1, a._2 + b._2))
+  //val avgByKey = step1.mapValues(i => (i._1, i._2, i._1 * 1.0/i._2))
+  //val dataToStore = avgByKey.map{ case(key, (total, num, myavg)) => val tokens = key.split("SEPARATOR"); (tokens(0), tokens(1), total, num, myavg, "", 0)}
+  averageScores
 }
 
 val scores = getScores(sample, items)
-val test = scores.filter{ case(id, item, totalscore, numreviews, avgscore) => numreviews > 1}.take(20)
-test.foreach(println)
+//val test = scores.filter{ case(id, item, totalscore, numreviews, avgscore) => numreviews > 1}.take(20)
+//test.foreach(println)
 //  filteredScores.map{ case(id, item, score, review) => ((item + id), 1}.reduceByKey(_+_)
 
 // Write to Cassandra
 //val saveData = scores.takeSample(false, 20)
 scores.saveToCassandra("dishes_db","dishes", 
-  SomeColumns(
-    "restaurantid", "dish", "totalscore", 
-    "numreviews", "avgrating", "promo", "promorating"))
+  SomeColumns("restaurantid", "dish", "avgrating", "totalscore", "numreviews", "promo", "promorating"))
 
-ColumnDef(promo,RegularColumn,VarCharType), ColumnDef(promorating,RegularColumn,IntType)
+//ColumnDef(promo,RegularColumn,VarCharType), ColumnDef(promorating,RegularColumn,IntType)
 
