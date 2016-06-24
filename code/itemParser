@@ -1,0 +1,43 @@
+val categoryItems = collection.mutable.Map[String, collection.mutable.Set[String]]()
+//categoryItems.put("as", "df")
+//categoryItems.get("aas").getOrElse(collection.mutable.Set[String]()).toString
+
+val items = collection.mutable.Set[String]()
+//items.add("pizza")
+//items("pizza") == true
+
+
+def readCategoriesAndItems(fileName: String, 
+						categoryItems: collection.mutable.Map[String, collection.mutable.Set[String]],  
+						items: collection.mutable.Set[String]) = {
+    
+    val source = scala.io.Source.fromFile(fileName);
+    
+    for (line <- source.getLines) {
+		
+		val tokens = line.split(":");
+		val categoryLine = tokens(0);
+		val item = tokens(1);
+		
+		items.add(item)
+
+		val categories = categoryLine.split('|');
+		
+		categories.foreach(category => {
+			
+			val itemSet = categoryItems.getOrElse(category, collection.mutable.Set[String]());
+			itemSet.add(item);
+			categoryItems.put(category, itemSet); 
+		})
+    }
+}
+
+val categoryItems = collection.mutable.Map[String, collection.mutable.Set[String]]()
+val items = collection.mutable.Set[String]()
+
+//categoryItems.clear
+//items.clear
+readCategoriesAndItems("input/dishes.txt", categoryItems, items)
+//readCategoriesAndItems("s3n://roy-data/dishes.txt", categoryItems, items)
+
+

@@ -1,0 +1,103 @@
+AWS_ACCESS_KEY_ID=AKIAIURA6MI4XESV726Q
+AWS_SECRET_ACCESS_KEY=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
+
+PKGS=edu.stanford.nlp:stanford-corenlp:3.6.0
+PKGS=$PKGS,edu.stanford.nlp:stanford-parser:3.6.0 
+PKGS=$PKGS,com.google.protobuf:protobuf-java:2.6.1
+PKGS=$PKGS,com.datastax.spark:spark-cassandra-connector_2.10:1.6.0
+//PKGS=$PKGS,com.datastax.spark:spark-cassandra-connector_2.10:1.5.0
+//PKGS=$PKGS,com.databricks.spark.corenlp:
+
+spark-shell   --packages $PKGS   --jars ./code/stanford-english-corenlp-2016-01-10-models.jar  --conf "spark.cassandra.connection.host=127.0.0.1"
+spark-shell   --packages $PKGS   --jars stanford-english-corenlp-2016-01-10-models.jar --conf "spark.cassandra.connection.host=127.0.0.1"
+spark-shell   --master local[*] --packages $PKGS   --jars stanford-english-corenlp-2016-01-10-models.jar --conf "spark.cassandra.connection.host=172.31.62.42" 
+spark-shell   --master spark://172.31.59.181:7077 --packages $PKGS   --jars stanford-english-corenlp-2016-01-10-models.jar --conf "spark.cassandra.connection.host=172.31.62.42" 
+spark-shell   --packages $PKGS   --jars stanford-english-corenlp-2016-01-10-models.jar --conf "spark.cassandra.connection.host=172.31.59.181,spark.executor.extraClassPath=./guava-16.0.1.jar"  --files ./guava-16.0.1.jar --driver-class-path ./guava-16.0.1.jar
+spark-shell   --packages $PKGS   --jars stanford-english-corenlp-2016-01-10-models.jar --conf "spark.cassandra.connection.host=172.31.59.181"  --files guava-16.0.1.jar --driver-class-path guava-16.0.1.jar --conf spark.executor.extraClassPath=guava-16.0.1.jar
+spark-shell   --packages $PKGS   --jars stanford-english-corenlp-2016-01-10-models.jar --conf "spark.cassandra.connection.host=172.31.59.181"  --files guava-16.0.1.jar --conf spark.executor.extraClassPath=guava-16.0.1.jar
+
+
+//spark-shell --packages edu.stanford.nlp:stanford-corenlp:3.6.0,com.google.protobuf:protobuf-java:2.6.1 --jars stanford-english-corenlp-2016-01-10-models.jar 
+import com.datastax.spark.connector._
+import org.apache.spark.SparkConf
+import java.util._
+import edu.stanford.nlp.pipeline._
+import edu.stanford.nlp.ling._
+import edu.stanford.nlp.ling.CoreAnnotations._
+import edu.stanford.nlp.sentiment.SentimentCoreAnnotations
+import edu.stanford.nlp.neural.rnn.RNNCoreAnnotations
+import edu.stanford.nlp.simple._;
+import scala.collection.JavaConversions._
+
+
+//val conf = new SparkConf(true).set("spark.cassandra.connection.host", "172.31.62.42")
+//val sc = new org.apache.spark.SparkContext(conf)
+val rdd = sc.cassandraTable("dishes_db", "dishes")
+rdd.count
+
+
+//val sample = sqlContext.read.json("input/yelp_academic_dataset_review.json")
+val sample = sqlContext.read.json("s3://roy-data/yelp_reviews.json")
+//val reviews = sqlContext.read.json("input/yelp_academic_dataset_review.json")
+val reviews = sample.sample(false,0.0001)
+reviews.cache
+//reviews.show
+
+def getScores (reviews: org.apache.spark.sql.DataFrame, items: scala.collection.mutable.Set[String]) = {
+  val scores = reviews.mapPartitions( rows => {
+  // Create core NLP
+  val props = new Properties()
+  props.put("annotators", "tokenize, ssplit, pos, lemma, parse, sentiment")
+  val coreNLP = new StanfordCoreNLP(props, false)
+
+  rows.map{ row => {
+
+  val review = row.getAs[String]("text")
+  val doc = new Document(review);
+  var item = "";
+  var score = -1;
+
+  for (sentence <- doc.sentences()) {  
+    
+    for (lemma <- sentence.lemmas()) {  
+            
+           if (items.contains(lemma)){
+              item = lemma;
+           }
+        }
+
+        if (item != ""){
+          //score = getSentiment(sentence.toString)
+          val scoreArray = coreNLP.process(sentence.toString).
+          get(classOf[CoreAnnotations.SentencesAnnotation]).
+          map(_.get(classOf[SentimentCoreAnnotations.SentimentAnnotatedTree])).
+          map(RNNCoreAnnotations.getPredictedClass(_))
+          score = scoreArray(0) + 1
+      }
+    }
+
+    (row.getAs[String]("business_id") + "SEPARATOR" + item, score)
+
+    }}
+  }).filter{ case(key, score) => score != -1}	
+
+  val step1 = scores.aggregateByKey((0.0, 0))((a, b) => (a._1 + b, a._2 + 1), (a, b) => (a._1 + b._1, a._2 + b._2))
+  val avgByKey = step1.mapValues(i => (i._1, i._2, i._1 * 1.0/i._2))
+  val dataToStore = avgByKey.map{ case(key, (total, num, myavg)) => val tokens = key.split("SEPARATOR"); (tokens(0), tokens(1), total, num, myavg, "", 0)}
+  dataToStore
+}
+
+val scores = getScores(sample, items)
+val test = scores.filter{ case(id, item, totalscore, numreviews, avgscore) => numreviews > 1}.take(20)
+test.foreach(println)
+//  filteredScores.map{ case(id, item, score, review) => ((item + id), 1}.reduceByKey(_+_)
+
+// Write to Cassandra
+//val saveData = scores.takeSample(false, 20)
+scores.saveToCassandra("dishes_db","dishes", 
+  SomeColumns(
+    "restaurantid", "dish", "totalscore", 
+    "numreviews", "avgrating", "promo", "promorating"))
+
+ColumnDef(promo,RegularColumn,VarCharType), ColumnDef(promorating,RegularColumn,IntType)
+
