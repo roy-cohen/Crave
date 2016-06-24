@@ -1,0 +1,703 @@
+dish,angel hair
+dish,antipasto salad
+dish,arugula salad
+dish,asada
+dish,avocado roll
+dish,avocado salad
+dish,baby back ribs
+dish,bacon burger
+dish,bacon cheeseburger
+dish,baked ziti
+dish,baklava
+dish,barbecue chicken pizza
+dish,bass sashimi
+dish,beef brisket
+dish,beef chow fun
+dish,beef egg foo young
+dish,beef lo mein
+dish,beef noodle
+dish,beef salad
+dish,beef sandwich
+dish,beef stew
+dish,beef teriyaki
+dish,belgian waffle
+dish,bento
+dish,biryani
+dish,black angus
+dish,blt sandwich
+dish,boneless ribs
+dish,boneless spare ribs
+dish,bread
+dish,bread pudding
+dish,breakfast burritos
+dish,brisket
+dish,broccoli pizza
+dish,brownie
+dish,bruschetta
+dish,buffalo chicken pizza
+dish,buffalo chicken salad
+dish,buffalo chicken sandwich
+dish,buffalo chicken wrap
+dish,burger
+dish,burrito
+dish,caesar salad
+dish,cake
+dish,calamari
+dish,calzone
+dish,caprese salad
+dish,carbonara
+dish,carne asada
+dish,chana masala
+dish,cheese enchilada
+dish,cheese pizza
+dish,cheese steak
+dish,cheese steak sub
+dish,cheeseburger
+dish,chicken biryani
+dish,chicken burrito
+dish,chicken caesar salad
+dish,chicken caesar wrap
+dish,chicken cheese steak
+dish,chicken chow mein
+dish,chicken club
+dish,chicken curry
+dish,chicken cutlet sandwich
+dish,chicken fajitas
+dish,chicken fingers
+dish,chicken francese
+dish,chicken gyro
+dish,chicken katsu
+dish,chicken kebab
+dish,chicken korma
+dish,chicken lo mein
+dish,chicken marsala
+dish,chicken noodle soup
+dish,chicken nuggets
+dish,chicken parmesan
+dish,chicken parmesan sandwich
+dish,chicken parmesan sub
+dish,chicken parmigiana
+dish,chicken pasta
+dish,chicken piccata
+dish,chicken salad
+dish,chicken salad sandwich
+dish,chicken salad wrap
+dish,chicken sandwich
+dish,chicken shawarma
+dish,chicken soup
+dish,chicken souvlaki
+dish,chicken steak
+dish,chicken strips
+dish,chicken sub
+dish,chicken tempura
+dish,chicken tenders
+dish,chicken teriyaki
+dish,chicken tikka
+dish,chicken tikka masala
+dish,chicken vindaloo
+dish,chicken wrap
+dish,chile relleno
+dish,chili cheese fries
+dish,chimichanga
+dish,chips and salsa
+dish,chocolate chip cookie
+dish,chop suey
+dish,chopped salad
+dish,chow fun
+dish,chow mein
+dish,chowder
+dish,clam chowder
+dish,club
+dish,club sandwich
+dish,cobb salad
+dish,cold noodles
+dish,coleslaw
+dish,cookie
+dish,corn soup
+dish,corned beef sandwich
+dish,crab cake
+dish,crab rangoon
+dish,crepe
+dish,crispy noodle
+dish,crispy taco
+dish,croissant
+dish,cucumber salad
+dish,curry
+dish,deep dish pizza
+dish,deli sandwich
+dish,dip
+dish,dosa
+dish,drunken noodle
+dish,egg drop
+dish,egg foo young
+dish,egg salad
+dish,egg salad sandwich
+dish,eggplant parmesan
+dish,eggplant parmigiana
+dish,enchilada
+dish,fajitas
+dish,falafel
+dish,falafel sandwich
+dish,fettuccine
+dish,fettuccine alfredo
+dish,filet mignon
+dish,fillet
+dish,fish
+dish,fish and chips
+dish,fish curry
+dish,fish fillet
+dish,fish salad
+dish,fish sandwich
+dish,fish taco
+dish,flatbread
+dish,florentine
+dish,flounder
+dish,foo young
+dish,francese
+dish,french dip
+dish,french fries
+dish,french onion soup
+dish,french toast
+dish,fresh fruit
+dish,fried calamari
+dish,fruit
+dish,fruit salad
+dish,garden salad
+dish,garlic bread
+dish,general tso chicken
+dish,gourmet pizza
+dish,greek pizza
+dish,greek salad
+dish,green curry
+dish,grilled chicken salad
+dish,grilled chicken sandwich
+dish,grilled chicken wrap
+dish,grilled steak
+dish,gyro sandwich
+dish,ham sandwich
+dish,hamburger
+dish,hard taco
+dish,hawaiian pizza
+dish,hero
+dish,hibachi
+dish,hoagie
+dish,home fries
+dish,hot and sour
+dish,hot dog
+dish,hot pastrami
+dish,hot sub
+dish,huevos rancheros
+dish,italian beef sandwich
+dish,italian hoagie
+dish,italian sandwich
+dish,italian sausage sandwich
+dish,italian sub
+dish,katsu
+dish,kebab
+dish,korma
+dish,kung pao
+dish,kung pao chicken
+dish,lasagna
+dish,lentil soup
+dish,lettuce wraps
+dish,linguine
+dish,lo mein
+dish,lobster
+dish,lobster ravioli
+dish,macaroni
+dish,macaroni and cheese
+dish,maguro
+dish,maki
+dish,maki sashimi
+dish,manicotti
+dish,margherita pizza
+dish,marsala
+dish,masala
+dish,masala dosa
+dish,massaman curry
+dish,meat ravioli
+dish,meat sauce
+dish,meatball sandwich
+dish,meatloaf
+dish,mediterranean salad
+dish,mei fun
+dish,melt
+dish,mexican pizza
+dish,milkshake
+dish,minestrone soup
+dish,moo goo gai pan
+dish,mostaccioli
+dish,muffins
+dish,mushroom burger
+dish,naan
+dish,nacho
+dish,new york strip
+dish,noodle
+dish,noodle soup
+dish,nuggets
+dish,octopus roll
+dish,octopus sashimi
+dish,omelettes
+dish,pad thai
+dish,pan fried noodles
+dish,pan pizza
+dish,panang curry
+dish,paneer
+dish,paneer tikka
+dish,panini
+dish,papaya salad
+dish,parmesan
+dish,parmigiana
+dish,pasta salad
+dish,pastrami
+dish,pastrami sandwich
+dish,patty melt
+dish,penne
+dish,penne alla vodka
+dish,pepper steak
+dish,pepperoni pizza
+dish,pesto pizza
+dish,philly cheese steak
+dish,philly cheese steak sandwich
+dish,philly steak
+dish,pho
+dish,piccata
+dish,pie
+dish,pita
+dish,pizza burger
+dish,pizza pie
+dish,pork chop
+dish,pork ribs
+dish,potato salad
+dish,prime rib
+dish,prosciutto
+dish,pudding
+dish,pulled pork sandwich
+dish,quesadilla
+dish,ramen
+dish,ranchero
+dish,ravioli
+dish,red curry
+dish,red snapper
+dish,relleno
+dish,reuben
+dish,reuben sandwich
+dish,rib eye steak
+dish,rice noodles
+dish,rice pudding
+dish,rice soup
+dish,rigatoni
+dish,risotto
+dish,roe
+dish,roti
+dish,sahimi salad
+dish,salad
+dish,salad wrap
+dish,salami
+dish,salmon roll
+dish,salmon salad
+dish,salmon sashimi
+dish,salmon teriyaki
+dish,salsa
+dish,sandwich
+dish,sashimi
+dish,sausage pizza
+dish,sausage sandwich
+dish,scampi
+dish,scrambled egg
+dish,seafood salad
+dish,seaweed salad
+dish,shake
+dish,shawarma
+dish,shish kebab
+dish,short rib
+dish,shrimp curry
+dish,shrimp fajitas
+dish,shrimp lo mein
+dish,shrimp parmigiana
+dish,shrimp salad
+dish,shrimp scampi
+dish,shrimp tempura
+dish,shrimp tempura roll
+dish,shrimp toast
+dish,sicilian
+dish,sicilian pizza
+dish,sirloin
+dish,sirloin steak
+dish,skirt steak
+dish,smoothie
+dish,snapper
+dish,soft taco
+dish,soups
+dish,souvlaki
+dish,spaghetti
+dish,spaghetti and meatball
+dish,spare ribs
+dish,spinach and artichoke dip
+dish,spinach pie
+dish,spinach pizza
+dish,spinach salad
+dish,steak and cheese sub
+dish,steak burrito
+dish,steak hoagie
+dish,steak quesadilla
+dish,steak salad
+dish,steak sandwich
+dish,steak sub
+dish,stew
+dish,stir fry
+dish,stromboli
+dish,stuffed pizza
+dish,sub
+dish,sweet potato fries
+dish,taco
+dish,taco salad
+dish,tandoori
+dish,tandoori chicken
+dish,tataki
+dish,tempura
+dish,tempura roll
+dish,tempura udon
+dish,tenders
+dish,teriyaki
+dish,thai curry
+dish,thin crust pizza
+dish,tikka
+dish,toast
+dish,tofu soup
+dish,tofu teriyaki
+dish,tom yum soup
+dish,tortas
+dish,tortellini
+dish,tortilla soup
+dish,tuna roll
+dish,tuna sahimi
+dish,tuna salad
+dish,tuna salad sandwich
+dish,tuna sandwich
+dish,tuna sub
+dish,tuna wrap
+dish,turkey bacon
+dish,turkey burger
+dish,turkey club sandwich
+dish,turkey sandwich
+dish,turkey sub
+dish,udon noodle
+dish,veal parm
+dish,vegetable lo mein
+dish,vegetable soup
+dish,vegetable tempura
+dish,vindaloo
+dish,waffle
+dish,wedge salad
+dish,western omelette
+dish,white pizza
+dish,wontons
+dish,wrap
+dish,yaki udon
+dish,yellow curry
+cuisine,afghan
+cuisine,african
+cuisine,albanian
+cuisine,alcohol
+cuisine,american
+cuisine,argentinian
+cuisine,asian
+cuisine,australian
+cuisine,austrian
+cuisine,bagels
+cuisine,bakery
+cuisine,bbq
+cuisine,belgian
+cuisine,brazilian
+cuisine,breakfast
+cuisine,british
+cuisine,burmese
+cuisine,cajun
+cuisine,californian
+cuisine,calzones
+cuisine,cambodian
+cuisine,cantonese
+cuisine,caribbean
+cuisine,cheesesteaks
+cuisine,chicken
+cuisine,chili
+cuisine,chinese
+cuisine,classic
+cuisine,coffee and tea
+cuisine,colombian
+cuisine,costa rican
+cuisine,crepes
+cuisine,cuban
+cuisine,deli
+cuisine,dessert
+cuisine,dim sum
+cuisine,diner
+cuisine,dinner
+cuisine,dominican
+cuisine,eclectic
+cuisine,ecuadorian
+cuisine,egyptian
+cuisine,el salvadoran
+cuisine,empanadas
+cuisine,english
+cuisine,ethiopian
+cuisine,filipino
+cuisine,fine dining
+cuisine,french
+cuisine,fresh fruits
+cuisine,frozen yogurt
+cuisine,german
+cuisine,gluten-free
+cuisine,greek
+cuisine,grill
+cuisine,grocery items
+cuisine,guatemalan
+cuisine,gyro
+cuisine,haitian
+cuisine,halal
+cuisine,hamburgers
+cuisine,hawaiian
+cuisine,healthy
+cuisine,hoagies
+cuisine,hot dogs
+cuisine,ice cream
+cuisine,indian
+cuisine,indonesian
+cuisine,irish
+cuisine,italian
+cuisine,jamaican
+cuisine,japanese
+cuisine,kids menu
+cuisine,korean
+cuisine,kosher
+cuisine,kosher-style
+cuisine,late night
+cuisine,latin american
+cuisine,lebanese
+cuisine,low carb
+cuisine,low fat
+cuisine,lunch
+cuisine,lunch specials
+cuisine,malaysian
+cuisine,mandarin
+cuisine,mediterranean
+cuisine,mexican
+cuisine,middle eastern
+cuisine,mongolian
+cuisine,moroccan
+cuisine,nepalese
+cuisine,new american
+cuisine,noodles
+cuisine,organic
+cuisine,pakistani
+cuisine,pasta
+cuisine,persian
+cuisine,peruvian
+cuisine,pitas
+cuisine,pizza
+cuisine,polish
+cuisine,portuguese
+cuisine,potato
+cuisine,pub food
+cuisine,puerto rican
+cuisine,ribs
+cuisine,russian
+cuisine,salads
+cuisine,sandwiches
+cuisine,scandinavian
+cuisine,seafood
+cuisine,senegalese
+cuisine,shakes
+cuisine,smoothies and juices
+cuisine,soul food
+cuisine,soup
+cuisine,south african
+cuisine,south american
+cuisine,southern
+cuisine,southwestern
+cuisine,spanish
+cuisine,steak
+cuisine,subs
+cuisine,sushi
+cuisine,szechwan
+cuisine,taiwanese
+cuisine,tapas
+cuisine,tex-mex
+cuisine,thai
+cuisine,tibetan
+cuisine,turkish
+cuisine,ukrainian
+cuisine,vegan
+cuisine,vegetarian
+cuisine,venezuelan
+cuisine,vietnamese
+cuisine,wings
+cuisine,wraps
+search term,apple crisp
+search term,artichoke
+search term,avocado toast
+search term,baked clams
+search term,baked potato
+search term,baked sweet potato
+search term,banana cream pie
+search term,banana pudding
+search term,bbq pork
+search term,bbq pulled pork
+search term,bbq ribs
+search term,beef fried rice
+search term,beef stroganoff
+search term,beignets
+search term,biscuits and gravy
+search term,bisque
+search term,black and white cookie
+search term,blackened chicken
+search term,blueberry pancakes
+search term,blueberry pie
+search term,bolognese
+search term,boneless buffalo wings
+search term,bratwurst
+search term,broccoli cheddar soup
+search term,brussel sprouts
+search term,bun bo hue
+search term,butternut squash soup
+search term,cannoli
+search term,cauliflower
+search term,chicharron
+search term,chilean sea bass
+search term,chocolate lava cake
+search term,chocolate pancakes
+search term,chorizo
+search term,clam strips
+search term,corn muffin
+search term,corn on the cob
+search term,cornbeef
+search term,crab fried rice
+search term,crab legs
+search term,cream of chicken soup
+search term,creme brulee
+search term,croque madame
+search term,custard
+search term,deviled eggs
+search term,diet coke
+search term,diet pepsi
+search term,donut
+search term,duck curry
+search term,egg
+search term,egg whites
+search term,eggs benedict
+search term,feta
+search term,focaccia
+search term,fried ice cream
+search term,fried pickles
+search term,frittata
+search term,gazpacho
+search term,gobi manchurian
+search term,grapefruit juice
+search term,grilled salmon salad
+search term,grilled vegetables
+search term,grits
+search term,gyoza
+search term,gyudon
+search term,hand pulled noodle
+search term,homemade pasta
+search term,hot sour soup
+search term,hummus
+search term,hush puppies
+search term,iced coffee
+search term,jalepeno poppers
+search term,japchae
+search term,kale caesar salad
+search term,key lime pie
+search term,kimchi fried rice
+search term,kofta
+search term,kombucha
+search term,korean barbeque
+search term,lobster mac and cheese
+search term,mango sticky rice
+search term,mashed potatoes and gravy
+search term,matzo ball soup
+search term,monkfish
+search term,moo shu pork
+search term,mortadella
+search term,mozzarella sticks
+search term,mozzerella sticks
+search term,mushroom risotto
+search term,new england clam chowder
+search term,nutella crepe
+search term,onion rings
+search term,oreo milkshake
+search term,oxtail
+search term,pad see ew
+search term,pad woon sen
+search term,pasta bolognese
+search term,peach cobbler
+search term,peanut
+search term,pigs in a blanket
+search term,pineapple curry
+search term,pineapple fried rice
+search term,pork fried rice
+search term,pork katsu
+search term,porridge
+search term,pumpkin pie
+search term,pumpkin ravioli
+search term,pupusas
+search term,queso dip
+search term,red velvet cake
+search term,roast duck
+search term,roast pork
+search term,roasted vegetables
+search term,root beer float
+search term,saag paneer
+search term,sauteed spinach
+search term,scallion pancake
+search term,sea bass
+search term,seared salmon
+search term,seared tuna
+search term,shepherd's pie
+search term,shrimp and broccoli
+search term,shrimp dumplings
+search term,shrimp fried rice
+search term,singapore mei fun
+search term,singapore noodle
+search term,smoked salmon
+search term,soba
+search term,soft shell crab
+search term,sorbet
+search term,soup dumpling
+search term,soup dumplings
+search term,sour cream
+search term,spanikopita
+search term,split pea soup
+search term,squid
+search term,steak tartare
+search term,steamed vegetables
+search term,strawberry shortcake
+search term,stroganoff
+search term,sundubu
+search term,sweet and sour pork
+search term,sweet and sour shrimp
+search term,tater tots
+search term,thai iced coffee
+search term,tiramisu
+search term,tom kha soup
+search term,tres leche
+search term,truffle fries
+search term,truffle mac and cheese
+search term,truffle pasta
+search term,tuna tartar
+search term,tuna tartare
+search term,turkey meatball
+search term,turkey meatloaf
+search term,tzatziki
+search term,udon
+search term,veal milanese
+search term,veggie wrap
+search term,vodka sauce
+search term,whitefish
+search term,whole wheat pasta
+search term,wonton noodle soup
+search term,xiao long bao
+search term,yakisoba
+search term,yakitori
+search term,yogurt parfait

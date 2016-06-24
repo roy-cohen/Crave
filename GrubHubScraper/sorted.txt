@@ -1,0 +1,334 @@
+pasta,angel hair
+salad,salad
+ribs,ribs
+burger,burger
+burger,cheeseburger
+macaroni,baked ziti
+pastry,baklava
+pizza,pizza
+sashimi,sashimi
+brisket,brisket
+noodles,chow fun
+eggs,foo young
+eggs,fu yung
+noodles,lo mein
+noodles,noodle
+salad,salad
+sandwich,sandwich
+stew,stew
+teriyaki,teriyaki
+waffle,waffle
+bento,bento
+steak,black angus
+sandwich,sandwich
+ribs,ribs
+bread,bread
+pudding,pudding
+brisket,brisket
+pizza,pizza
+cake,brownie
+bruschetta,bruschetta
+salad,salad
+sandwich,sandwich
+wrap,wrap
+burger,burger
+burrito,burrito
+salad,salad
+cake,cake
+calamari,calamari
+calzone,calzone
+pasta,carbonara
+steak,carne asada
+masala,masala
+enchilada,enchilada
+steak,steak
+sandwich,sub
+burger,cheeseburger
+biryani,biryani
+burrito,burrito
+wrap,wrap
+steak,steak
+chow mein,chow mein
+sandwich,club
+curry,curry
+sandwich,sandwich
+fajitas,fajitas
+chicken tenders,chicken fingers
+francese,francese
+gyro,gyro
+katsu,katsu
+kebab,kebab
+korma,korma
+noodles,lo mein
+marsala,marsala
+soup,soup
+chicken nuggets,chicken nuggets
+parmesan,parmesan
+sandwich,sandwich
+sandwich,sub
+parmesan,parmigiana
+pasta,pasta
+piccata,piccata
+salad,salad
+sandwich,sandwich
+wrap,wrap
+sandwich,sandwich
+shawarma,shawarma
+soup,soup
+souvlaki,souvlaki
+steak,steak
+chicken tenders,chicken strips
+sandwich,sub
+tempura,tempura
+chicken tenders,chicken tenders
+teriyaki,teriyaki
+tikka,tikka
+vindaloo,vindaloo
+wrap,wrap
+relleno,relleno
+fries,fries
+burrito,chimichanga
+dip,chips and salsa
+cookie,chocolate chip cookie
+chop suey,chop suey
+noodles,chow fun
+chow mein,chow mein
+chowder,chowder
+sandwich,club
+sandwich,sandwich
+salad,coleslaw
+cookie,cookie
+soup,soup
+sandwich,sandwich
+crab,crab
+crepe,crepe
+noodles,noodle
+taco,taco
+pastry,croissant
+curry,curry
+pizza,pizza
+sandwich,sandwich
+dip,dip
+dosa,dosa
+noodles,noodle
+soup,egg drop
+foo young,foo young
+sandich,sandwich
+parmesan,parmesan
+parmesan,parmigiana
+enchilada,enchilada
+fajitas,fajitas
+falafel,falafel
+sandwich,sandwich
+fettuccine,fettuccine
+steak,filet mignon
+fillet,fillet
+fish,fish
+bread,flatbread
+eggs,florentine
+florentine,florentine
+benedict,benedict
+fish,flounder
+foo young,foo young
+francese,francese
+dip,french dip
+fries,fries
+soup,french onion
+french toast,french toast
+fruit,fruit
+calamari,calamari
+fruit,fruit
+bread,bread
+general tso,general tso
+curry,curry
+wrap,wrap
+steak,steak
+gyro,gyro
+hamburger,hamburger
+taco,taco
+sandwich,hero
+hibachi,hibachi
+sandwich,hoagie
+fries,fries
+soup,hot and sour
+hot dog,hot dog
+sandwich,hot pastrami
+sandwich,hot sub
+eggs,huevos rancheros
+huevos rancheros,huevos rancheros
+sandwich,sandwich
+sandwich,hoagie
+sandwich,sandwich
+sandwich,sub
+katsu,katsu
+kebab,kebab
+korma,korma
+kung pao,kung pao
+lasagna,lasagna
+soup,lentil
+wrap,wraps
+pasta,linguine
+noodles,lo mein
+lobster,lobster
+ravioli,ravioli
+macaroni,macaroni
+sushi,maguro
+sushi,maki
+sushi,maki sashimi
+pasta,manicotti
+marsala,marsala
+masala,masala
+dosa,dosa
+curry,massaman
+ravioli,ravioli
+meatball,meatball
+meatloaf,meatloaf
+mei fun,mei fun
+sandwich,melt
+milkshake,milkshake
+soup,minestrone
+moo goo gai pan,moo goo gai pan
+pasta,mostaccioli
+pastry,muffins
+bread,naan
+tortilla,nacho
+steak,new york strip
+noodles,noodle
+soup,noodle
+nuggets,nuggets
+sushi,octopus roll
+sushi,octopus sashimi
+eggs,omelettes
+omelettes,omelettes
+noodles,pad thai
+noodles,pan fried
+curry,panang
+paneer,paneer
+tikka,tikka
+sandwich,panini
+parmesan,parmesan
+parmigiana,parmigiana
+pasta,pasta
+sandwich,pastrami
+burger,patty melt
+hamburger,patty melt
+pasta,penne
+philly cheese steak,philly cheese steak
+pho,pho
+soup,pho
+piccata,piccata
+pie,pie
+pita,pita
+pork,pork
+ribs,ribs
+steak,prime rib
+prosciutto,prosciutto
+pudding,pudding
+pork,pork
+quesadilla,quesadilla
+soup,ramen
+ramen,ramen
+eggs,ranchero
+ranchero,ranchero
+pasta,ravioli
+dumpling,ravioli
+ravioli,ravioli
+curry,red curry
+red snapper,red snapper
+fish,red snapper
+snapper,red snapper
+relleno,relleno
+sandwich,reuben
+sandwich,reuben
+steak,rib eye
+pasta,rigatoni
+rice,risotto
+sushi,roe
+roti,roti
+sashimi,sashimi
+salad,salad
+wrap,wrap
+salad,salad
+sushi,salmon roll
+sashimi,salmon sashimi
+teriyaki,teriyaki
+dip,salsa
+sandwich,sandwich
+sashimi,sashimi
+scampi,scampi
+lobster,scampi
+shrimp,scampi
+prawns,scampi
+eggs,scrambled egg
+milkshake,shake
+shawarma,shawarma
+kebab,kebab
+ribs,rib
+curry,curry
+shrimp,shrimp
+fajitas,fajitas
+shrimp,shrimp
+noodles,lo mein
+scampi,scampi
+tempura,tempura
+shrimp,shrimp
+tempura,tempura
+sushi,sushi
+steak,sirloin
+milkshake,smoothie
+snapper,snapper
+fish,snapper
+taco,taco
+soup,soups
+souvlaki,souvlaki
+spaghetti,spaghetti
+spaghetti,spaghetti
+meatball,meatball
+ribs,ribs
+dip,spinach and artichoke
+pie,pie
+sandwich,sub
+burrito,burrito
+steak,steak
+sandwich,hoagie
+quesadilla,quesadilla
+stew,stew
+stir fry,stir fry
+stromboli,stromboli
+sandwich,sub
+fries,fries
+taco,taco
+salad,salad
+tandoori,tandoori
+sushi,tataki
+tempura,tempura
+sushi,tempura roll
+tempura,tempura udon
+sushi,tempura udon
+tenders,tenders
+teriyaki,teriyaki
+curry,curry
+tikka,tikka
+bread,toast
+teriyaki,teriyaki
+soup,tom yum
+torta,tortas
+torta,torta
+pasta,tortellini
+tortilla,tortilla
+sushi,tuna roll
+wrap,wrap
+sandwich,sub
+noodles,udon
+parmesan,parm
+noodles,lo mein
+soup,soup
+tempura,tempura
+vindaloo,vindaloo
+waffle,waffle
+eggs,omelette
+eggs,omelettes
+dumpling,wontons
+wrap,wrap
+noodles,yaki udon
+curry,curry

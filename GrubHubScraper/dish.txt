@@ -1,0 +1,398 @@
+angel hair
+antipasto salad
+arugula salad
+asada
+avocado roll
+avocado salad
+baby back ribs
+bacon burger
+bacon cheeseburger
+baked ziti
+baklava
+barbecue chicken pizza
+bass sashimi
+beef brisket
+beef chow fun
+beef egg foo young
+beef lo mein
+beef noodle
+beef salad
+beef sandwich
+beef stew
+beef teriyaki
+belgian waffle
+bento
+biryani
+black angus
+blt sandwich
+boneless ribs
+boneless spare ribs
+bread
+bread pudding
+breakfast burritos
+brisket
+broccoli pizza
+brownie
+bruschetta
+buffalo chicken pizza
+buffalo chicken salad
+buffalo chicken sandwich
+buffalo chicken wrap
+burger
+burrito
+caesar salad
+cake
+calamari
+calzone
+caprese salad
+carbonara
+carne asada
+chana masala
+cheese enchilada
+cheese pizza
+cheese steak
+cheese steak sub
+cheeseburger
+chicken biryani
+chicken burrito
+chicken caesar salad
+chicken caesar wrap
+chicken cheese steak
+chicken chow mein
+chicken club
+chicken curry
+chicken cutlet sandwich
+chicken fajitas
+chicken fingers
+chicken francese
+chicken gyro
+chicken katsu
+chicken kebab
+chicken korma
+chicken lo mein
+chicken marsala
+chicken noodle soup
+chicken nuggets
+chicken parmesan
+chicken parmesan sandwich
+chicken parmesan sub
+chicken parmigiana
+chicken pasta
+chicken piccata
+chicken salad
+chicken salad sandwich
+chicken salad wrap
+chicken sandwich
+chicken shawarma
+chicken soup
+chicken souvlaki
+chicken steak
+chicken strips
+chicken sub
+chicken tempura
+chicken tenders
+chicken teriyaki
+chicken tikka
+chicken tikka masala
+chicken vindaloo
+chicken wrap
+chile relleno
+chili cheese fries
+chimichanga
+chips and salsa
+chocolate chip cookie
+chop suey
+chopped salad
+chow fun
+chow mein
+chowder
+clam chowder
+club
+club sandwich
+cobb salad
+cold noodles
+coleslaw
+cookie
+corn soup
+corned beef sandwich
+crab cake
+crab rangoon
+crepe
+crispy noodle
+crispy taco
+croissant
+cucumber salad
+curry
+deep dish pizza
+deli sandwich
+dip
+dosa
+drunken noodle
+egg drop
+egg foo young
+egg salad
+egg salad sandwich
+eggplant parmesan
+eggplant parmigiana
+enchilada
+fajitas
+falafel
+falafel sandwich
+fettuccine
+fettuccine alfredo
+filet mignon
+fillet
+fish
+fish and chips
+fish curry
+fish fillet
+fish salad
+fish sandwich
+fish taco
+flatbread
+florentine
+flounder
+foo young
+francese
+french dip
+french fries
+french onion soup
+french toast
+fresh fruit
+fried calamari
+fruit
+fruit salad
+garden salad
+garlic bread
+general tso chicken
+gourmet pizza
+greek pizza
+greek salad
+green curry
+grilled chicken salad
+grilled chicken sandwich
+grilled chicken wrap
+grilled steak
+gyro sandwich
+ham sandwich
+hamburger
+hard taco
+hawaiian pizza
+hero
+hibachi
+hoagie
+home fries
+hot and sour
+hot dog
+hot pastrami
+hot sub
+huevos rancheros
+italian beef sandwich
+italian hoagie
+italian sandwich
+italian sausage sandwich
+italian sub
+katsu
+kebab
+korma
+kung pao
+kung pao chicken
+lasagna
+lentil soup
+lettuce wraps
+linguine
+lo mein
+lobster
+lobster ravioli
+macaroni
+macaroni and cheese
+maguro
+maki
+maki sashimi
+manicotti
+margherita pizza
+marsala
+masala
+masala dosa
+massaman curry
+meat ravioli
+meat sauce
+meatball sandwich
+meatloaf
+mediterranean salad
+mei fun
+melt
+mexican pizza
+milkshake
+minestrone soup
+moo goo gai pan
+mostaccioli
+muffins
+mushroom burger
+naan
+nacho
+new york strip
+noodle
+noodle soup
+nuggets
+octopus roll
+octopus sashimi
+omelettes
+pad thai
+pan fried noodles
+pan pizza
+panang curry
+paneer
+paneer tikka
+panini
+papaya salad
+parmesan
+parmigiana
+pasta salad
+pastrami
+pastrami sandwich
+patty melt
+penne
+penne alla vodka
+pepper steak
+pepperoni pizza
+pesto pizza
+philly cheese steak
+philly cheese steak sandwich
+philly steak
+pho
+piccata
+pie
+pita
+pizza burger
+pizza pie
+pork chop
+pork ribs
+potato salad
+prime rib
+prosciutto
+pudding
+pulled pork sandwich
+quesadilla
+ramen
+ranchero
+ravioli
+red curry
+red snapper
+relleno
+reuben
+reuben sandwich
+rib eye steak
+rice noodles
+rice pudding
+rice soup
+rigatoni
+risotto
+roe
+roti
+sahimi salad
+salad
+salad wrap
+salami
+salmon roll
+salmon salad
+salmon sashimi
+salmon teriyaki
+salsa
+sandwich
+sashimi
+sausage pizza
+sausage sandwich
+scampi
+scrambled egg
+seafood salad
+seaweed salad
+shake
+shawarma
+shish kebab
+short rib
+shrimp curry
+shrimp fajitas
+shrimp lo mein
+shrimp parmigiana
+shrimp salad
+shrimp scampi
+shrimp tempura
+shrimp tempura roll
+shrimp toast
+sicilian
+sicilian pizza
+sirloin
+sirloin steak
+skirt steak
+smoothie
+snapper
+soft taco
+soups
+souvlaki
+spaghetti
+spaghetti and meatball
+spare ribs
+spinach and artichoke dip
+spinach pie
+spinach pizza
+spinach salad
+steak and cheese sub
+steak burrito
+steak hoagie
+steak quesadilla
+steak salad
+steak sandwich
+steak sub
+stew
+stir fry
+stromboli
+stuffed pizza
+sub
+sweet potato fries
+taco
+taco salad
+tandoori
+tandoori chicken
+tataki
+tempura
+tempura roll
+tempura udon
+tenders
+teriyaki
+thai curry
+thin crust pizza
+tikka
+toast
+tofu soup
+tofu teriyaki
+tom yum soup
+tortas
+tortellini
+tortilla soup
+tuna roll
+tuna sahimi
+tuna salad
+tuna salad sandwich
+tuna sandwich
+tuna sub
+tuna wrap
+turkey bacon
+turkey burger
+turkey club sandwich
+turkey sandwich
+turkey sub
+udon noodle
+veal parm
+vegetable lo mein
+vegetable soup
+vegetable tempura
+vindaloo
+waffle
+wedge salad
+western omelette
+white pizza
+wontons
+wrap
+yaki udon
+yellow curry
