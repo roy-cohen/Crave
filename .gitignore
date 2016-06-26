@@ -10,3 +10,22 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+
+code/metastore_db	
+code/stanford-corenlp-full-2015-12-09
+code/stanford-corenlp-full-2015-12-09.zip
+code/stanford-english-corenlp-2016-01-10-models.jar
+code/SparkBatch/.idea/artifacts
+code/SparkBatch/.idea/libraries
+code/SparkBatch/.idea
+code/SparkBatch/target
+yelp
+input/yelp_academic_dataset_review.json
+input/yelp_academic_dataset_tip.json
+input/yelp_academic_dataset_business.json
+code/SparkBatch/input/yelpbusinessmin.json
+code/SparkBatch/input/yelpreviewmin.json
+code/SparkBatch/input/yelptipmin.json
+derby.log
+metastore_db

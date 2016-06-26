@@ -1,6 +1,3 @@
-
-
-
 import com.datastax.spark.connector._
 import org.apache.spark.SparkConf
 import java.util._
@@ -11,22 +8,42 @@ import edu.stanford.nlp.sentiment.SentimentCoreAnnotations
 import edu.stanford.nlp.neural.rnn.RNNCoreAnnotations
 import edu.stanford.nlp.simple._;
 import scala.collection.JavaConversions._
+import scala.util.control.Breaks._
+import org.apache.spark.sql.types.{StructType,StructField,StringType,IntegerType,DoubleType};
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.cassandra._
 
 
 //val conf = new SparkConf(true).set("spark.cassandra.connection.host", "172.31.62.42")
 //val sc = new org.apache.spark.SparkContext(conf)
-val rdd = sc.cassandraTable("dishes_db", "dishes")
-rdd.count
+//val rdd = sc.cassandraTable("dishes_db", "dishes")
+//rdd.count
 
 
 //val sample = sqlContext.read.json("input/yelp_academic_dataset_review.json")
-val sample = sqlContext.read.json("s3://roy-data/yelp_reviews.json")
-//val reviews = sqlContext.read.json("input/yelp_academic_dataset_review.json")
-val reviews = sample.sample(false,0.0001)
+//val sample = sqlContext.read.json("s3://roy-data/yelp_reviews.json")
+val sample = sqlContext.read.json("file:///home/hadoop/input/yelpreviewmin.json") //in local mode only
+val reviews = sample.sample(false,0.1)
 reviews.cache
+
+val sample1 = sqlContext.read.json("file:///home/hadoop/input/yelptipmin.json") //in local mode only
+val tips = sample.sample(false,0.1)
+tips.cache
+
+
+val sample2 = sqlContext.read.json("file:///home/hadoop/input/yelpbusinessmin.json") //in local mode only
+//val sample2a = sample2.sample(false,0.1)
+sample2.registerTempTable("businesses")
+val businesses = sqlContext.sql("SELECT business_id, name, full_address, city, state, stars, review_count FROM businesses")
+//.where(array_contains($"categories", "Restaurants"))
+businesses.cache
+
+
+
 //reviews.show
 
-case class ReviewInfo(score:Int, promoText:String, promoDate:String, promoScore:Int) extends Product with Serializable
+case class ReviewInfo(score:Int, promoText:String, promoScore:Int, promoDate:String) extends Product with Serializable
+//case class ReviewInfo(score:Int, promoText:String, promoDate:String, promoScore:Int) extends Product with Serializable
 type ReviewCollector = (Int, ReviewInfo)
 type DishScores = (String, (Int, ReviewInfo)) 
 
@@ -37,10 +54,10 @@ val scoreCombiner = (collector: ReviewCollector, review1: ReviewInfo) => {
     var promoText = "";
     var promoDate = "";
     val (numReviews, (review2)) = collector
-    if (review1.score > review2.score) { promoText = review1.promoText; promoScore = review1.score; promoDate = review1.promoDate; }
-    else { promoText = review2.promoText; promoScore = review2.score; promoDate = review2.promoDate; }
+    if (review1.promoScore > review2.promoScore) { promoText = review1.promoText; promoScore = review1.promoScore; promoDate = review1.promoDate; }
+    else { promoText = review2.promoText; promoScore = review2.promoScore; promoDate = review2.promoDate; }
     
-    val reviewInfoResult = new ReviewInfo(review1.score + review2.score, promoText, promoDate, promoScore)
+    val reviewInfoResult = new ReviewInfo(review1.score + review2.score, promoText, promoScore, promoDate)
     (numReviews + 1, reviewInfoResult)
 }
 
@@ -53,22 +70,23 @@ val scoreMerger = (collector1: ReviewCollector, collector2: ReviewCollector) => 
     var promoText = "";
     var promoDate = "";
 
-    if (review1.score > review2.score) { promoText = review1.promoText; promoScore = review1.score; promoDate = review1.promoDate; }
-    else { promoText = review2.promoText; promoScore = review2.score; promoDate = review2.promoDate; }
+    if (review1.promoScore > review2.promoScore) { promoText = review1.promoText; promoScore = review1.promoScore; promoDate = review1.promoDate; }
+    else { promoText = review2.promoText; promoScore = review2.promoScore; promoDate = review2.promoDate; }
 
-    val reviewInfoResult = new ReviewInfo(review1.score + review2.score, promoText, promoDate, promoScore)
+    val reviewInfoResult = new ReviewInfo(review1.score + review2.score, promoText, promoScore, promoDate)
     (numReviews1 + numReviews2, reviewInfoResult)
 }   
 
 val averagingFunction = (dishScore: DishScores) => {
        val (key, (numReviews, reviewInfo)) = dishScore
-       (key, (reviewInfo.score / numReviews), reviewInfo.score, numReviews, reviewInfo.promoText, reviewInfo.promoDate, reviewInfo.promoScore)
+       (key, (reviewInfo.score * 1.0 / numReviews), reviewInfo.score, numReviews, reviewInfo.promoText, reviewInfo.promoDate, reviewInfo.promoScore)
     }
 
 def getScores (reviews: org.apache.spark.sql.DataFrame, items: scala.collection.mutable.Set[String]) = {
   val scores = reviews.mapPartitions( rows => {
   // Create core NLP
   val props = new Properties()
+  //props.put("annotators", "tokenize, ssplit, pos, lemma, parse, sentiment")
   props.put("annotators", "tokenize, ssplit, pos, lemma, parse, sentiment")
   val coreNLP = new StanfordCoreNLP(props, false)
 
@@ -78,31 +96,30 @@ def getScores (reviews: org.apache.spark.sql.DataFrame, items: scala.collection.
   val date = row.getAs[String]("date")
   val doc = new Document(review);
   var item = "";
-  var score = -1;
+  var score = -1;   
   var sentenceWithItem = ""
 
-  for (sentence <- doc.sentences()) {  
-    
-    for (lemma <- sentence.lemmas()) {  
-            
-           if (items.contains(lemma)){
-              item = lemma;
-           }
-        }
+  breakable { for (sentence <- doc.sentences()) {  
 
-        if (item != ""){
-          //score = getSentiment(sentence.toString)
+    breakable { for (lemma <- sentence.lemmas()) {  
+            
+       if (items.contains(lemma)){
+          item = lemma;
           sentenceWithItem = sentence.text
-          val scoreArray = coreNLP.process(sentence.toString).
+          val scoreArray = coreNLP.process(sentenceWithItem).
           get(classOf[CoreAnnotations.SentencesAnnotation]).
           map(_.get(classOf[SentimentCoreAnnotations.SentimentAnnotatedTree])).
           map(RNNCoreAnnotations.getPredictedClass(_))
           score = scoreArray(0) + 1
-      }
-    }
+          break
+       }
+    }}
+
+    if (score != -1) break
+  }}
 
     val key = row.getAs[String]("business_id") + "SEPARATOR" + item
-    val reviewInfo = new ReviewInfo(score, sentenceWithItem, date, score)
+    val reviewInfo = new ReviewInfo(score, sentenceWithItem, score, date)
     (key, reviewInfo)
     }}
   })
@@ -121,15 +138,54 @@ def getScores (reviews: org.apache.spark.sql.DataFrame, items: scala.collection.
   averageScores
 }
 
-val scores = getScores(sample, items)
+val scoreSchema = StructType(Array(StructField("businessid",StringType,true),StructField("dish",StringType,true),StructField("avgrating",DoubleType,true),StructField("totalscore",IntegerType,true),StructField("numreviews",IntegerType,true),StructField("promotext",StringType,true),StructField("promoscore",IntegerType,true)))
+val scores = getScores(reviews, items)
+
+val tipScores = getScores(tips, items)
+val union = scores.union(tipScores)
+
+val rowRDD = union.map(p => Row(p._1, p._2, p._3, p._4, p._5, p._6, p._7) )
+val scoresDF = sqlContext.createDataFrame(rowRDD, scoreSchema)
+scoresDF.registerTempTable("scores")
+
+val joined = scoresDF.join(businesses, scoresDF("businessid") === businesses("business_id")).drop(businesses("business_id")).cache
+//val reviewsToStore = joined.map(row =>  
+    //(joined("city"), joined("businessId"), joined("dish"), joined("avgrating"), joined("totalScore"), joined("numreviews"), joined("promoText"), joined("promoScore"))
+    //)
+
+
+val rtmp = joined.select(joined("businessid"), joined("city"), joined("state"), joined("dish"), joined("avgrating"), joined("totalscore"), joined("numreviews"), joined("promotext"), joined("promoscore") )
+val rtmp2 = rtmp.map(row => (row(0),row(1),row(2),row(3),row(4),row(5),row(6),row(7),row(8)))
+val rtmp3 = rtmp2.map{case (businessid, city, state, dish, avgrating, totalscore, numreviews, promotext, promoscore) => (businessid.toString, dish.toString, java.lang.Double.parseDouble(avgrating.toString), java.lang.Integer.parseInt(totalscore.toString), java.lang.Integer.parseInt(numreviews.toString), promotext.toString, java.lang.Integer.parseInt(promoscore.toString), city.toString + state.toString)}
+val reviewRowRDD = rtmp3.map(p => Row(p._1, p._2, p._3, p._4, p._5, p._6, p._7, p._8))
+val reviewSchema = StructType(Array(StructField("businessid",StringType,true),StructField("dish",StringType,true),StructField("avgrating",DoubleType,true),StructField("totalscore",IntegerType,true),StructField("numreviews",IntegerType,true),StructField("promotext",StringType,true),StructField("promoscore",IntegerType,true),StructField("citystate",StringType,true)))
+val reviewsToStore = sqlContext.createDataFrame(reviewRowRDD, reviewSchema)
+//val reviewsToStore = joined.select(joined("businessid"), joined("city"), joined("dish"), joined("avgrating"), joined("totalscore"), joined("numreviews"), joined("promotext"), joined("promoscore") )
+reviewsToStore.write.cassandraFormat("dishes", "dishes_db").save()
+//val reviewsToStore = joined.map(row =>  
+//    (joined("city"), joined("businessId"), joined("dish"), joined("averageRating"), joined("totalScore"), joined("numreviews"), joined("promoText"), joined("promoScore"))
+//    )
+
+val tmp = joined.select(joined("businessid"), joined("name"), joined("full_address"), joined("city"), joined("state"), joined("stars"), joined("review_count"))
+val tmp2 = tmp.map(row => (row(0),row(1),row(2),row(3),row(4),row(5),row(6)))
+val tmp3 = tmp2.map{case (businessid, name, full_address, city, state, stars, reviewcount) => (businessid.toString, name.toString, full_address.toString, city.toString, state.toString, java.lang.Double.parseDouble(stars.toString), java.lang.Integer.parseInt(reviewcount.toString), city.toString + state.toString)}
+val businessRowRDD = tmp3.map(p => Row(p._1, p._2, p._3, p._4, p._5, p._6, p._7, p._8) )
+//val businessesToStore = joined.select(joined("businessid"), joined("name"), joined("full_address"), joined("city"), joined("state"))
+val businessSchema = StructType(Array(StructField("businessid",StringType,true),StructField("name",StringType,true),StructField("full_address",StringType,true),StructField("city",StringType,true),StructField("state",StringType,true),StructField("stars",DoubleType,true),StructField("reviewcount",IntegerType,true),StructField("citystate",StringType,true)))
+val businessesToStore = sqlContext.createDataFrame(businessRowRDD, businessSchema)
+businessesToStore.write.cassandraFormat("businesses", "dishes_db").save()
+
 //val test = scores.filter{ case(id, item, totalscore, numreviews, avgscore) => numreviews > 1}.take(20)
 //test.foreach(println)
 //  filteredScores.map{ case(id, item, score, review) => ((item + id), 1}.reduceByKey(_+_)
 
 // Write to Cassandra
 //val saveData = scores.takeSample(false, 20)
-scores.saveToCassandra("dishes_db","dishes", 
-  SomeColumns("restaurantid", "dish", "avgrating", "totalscore", "numreviews", "promo", "promorating"))
+//reviewsToStore.saveToCassandra("dishes_db","dishes", 
+//  SomeColumns("city", "businessid", "dish", "avgrating", "totalscore", "numreviews", "promotext", "promoscore"))
+
+//businessesToStore.saveToCassandra("dishes_db","businesses", 
+//  SomeColumns("businessid", "name", "full_address", "city", "state"))
 
 //ColumnDef(promo,RegularColumn,VarCharType), ColumnDef(promorating,RegularColumn,IntType)
 
