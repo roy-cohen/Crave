@@ -12,7 +12,10 @@ object App {
 
   //val conf = new SparkConf().setAppName("yelp batch job").setMaster("local[*]")
   //val sc = new SparkContext(conf)
-  val conf = new SparkConf(true).set("spark.cassandra.connection.host", "172.31.62.42")
+  val conf = new SparkConf(true).
+    set("spark.cassandra.connection.host", "127.0.0.1").
+    setAppName("yelp batch job").
+    setMaster("local[*]")
   val sc = new SparkContext(conf)
   //val rdd = sc.cassandraTable("dishes_db", "dishes")
   //rdd.count

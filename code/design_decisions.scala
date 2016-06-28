@@ -4,9 +4,15 @@ use cases:
 1. search for best dish in a city (requires sorting by the average score, taking top 5) 
 	so I thought to have the averagescore be the clustering key, for efficient sorting and retrieval
 
-Since I cannot update the primary key, I cannot use the averagescore as my clustering key. This means
-I decided to use dish,citystate as my partioning key, so that all dishes for a specific citystate will
+1a. search for the best dish per restaurant
+	need to be able to search only per citystate, which means dish cannot be part of the partition key
+
+Since I cannot update the primary key, I cannot use the averagescore as my clustering key. 
+I need to use citystate as my partioning key, so that all rows for a specific citystate will
 be stored on the same partition.
+
+And dish is the clustering key so I can search for a specific dish in a citystate (and since its not a partition key,
+	I can also search for all dishes in a citystate)
 
 I would have to grab dish reviews for that citystate, and then do the sort on averagescores in the spark 
 application. This should be ok, as the data returned for dish,city,state combo should not be too large
@@ -15,14 +21,14 @@ application. This should be ok, as the data returned for dish,city,state combo s
 2. be able to search for multiple dishes in city, if the search is for a category(which contains multiple dishes)
     for example a search for noodles can return noodles, ramen, pho, pad thai, etc.
 
-Since dish is part of my partitioning key, the IN clause is supported, and I can use that to look up multiple dishes 
+Since dish is my clustering key, the IN clause is supported, and I can use that to look up multiple dishes 
 in that citystate.
     
 3. inserting new reviews (which would require updating the average score values) but you cannot update
     a primary key value  (it would also require to update for a specific business)
 
-I can now update averagescore since it is not my clustering key.  I defined businessid as my clustering key
-so that I can update a row citystate,dish, and businessid 
+I can now update averagescore since it is not my clustering key.  I create an index on businessid so that I can 
+update a row by citystate, dish, and businessid 
 
 4. upon a search, get businesses for a specific city, state, and then search for dishes by keying on the business ID?
 This requires 2 trips to cassandra on every search. In order to make this more efficient, I joined the business data and 

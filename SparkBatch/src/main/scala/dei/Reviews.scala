@@ -1,29 +1,30 @@
 package dei
 
 import org.apache.spark.SparkContext
+import com.datastax.spark.connector._
+import org.apache.spark.SparkConf
+import java.util._
+import edu.stanford.nlp.pipeline._
+import edu.stanford.nlp.ling._
+import edu.stanford.nlp.ling.CoreAnnotations._
+import edu.stanford.nlp.sentiment.SentimentCoreAnnotations
+import edu.stanford.nlp.neural.rnn.RNNCoreAnnotations
+import edu.stanford.nlp.simple.Document;
+import scala.collection.JavaConversions._
+import scala.util.control.Breaks._
+import org.apache.spark.sql.types.{StructType,StructField,StringType,IntegerType,DoubleType};
+import org.apache.spark.sql.Row;
 
 /**
   * Created by roycohen on 6/25/16.
   */
-class Reviews {
+class Reviews extends Serializable{
 
-  import com.datastax.spark.connector._
-  import org.apache.spark.SparkConf
-  import java.util._
-  import edu.stanford.nlp.pipeline._
-  import edu.stanford.nlp.ling._
-  import edu.stanford.nlp.ling.CoreAnnotations._
-  import edu.stanford.nlp.sentiment.SentimentCoreAnnotations
-  import edu.stanford.nlp.neural.rnn.RNNCoreAnnotations
-  import edu.stanford.nlp.simple.Document;
-  import scala.collection.JavaConversions._
-  import scala.util.control.Breaks._
-  import org.apache.spark.sql.types.{StructType,StructField,StringType,IntegerType,DoubleType};
-  import org.apache.spark.sql.Row;
+
 
 
   val sample = App.sqlContext.read.json("input/yelpreviewmin.json") //in local mode only
-  val reviews = sample.sample(false,0.1)
+  val reviews = sample.sample(false,1)
   reviews.cache
 
 

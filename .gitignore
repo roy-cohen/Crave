@@ -20,6 +20,7 @@ code/SparkBatch/.idea/artifacts
 code/SparkBatch/.idea/libraries
 code/SparkBatch/.idea
 code/SparkBatch/target
+code/derby.log
 yelp
 input/yelp_academic_dataset_review.json
 input/yelp_academic_dataset_tip.json
@@ -35,3 +36,5 @@ SparkBatch/.idea
 derby.log
 metastore_db
 SparkBatch/target
+SparkBatch/stanford-corenlp-full-2015-12-09/
+SparkBatch/stanford-english-corenlp-2016-01-10-models.jar

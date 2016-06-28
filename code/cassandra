@@ -8,6 +8,20 @@ CREATE KEYSPACE dishes_db WITH replication = {
 
 USE dishes_db;
 
+-- DROP TABLE IF EXISTS dishes;
+-- CREATE TABLE dishes (
+--   citystate TEXT,
+--   dish TEXT,
+--   avgrating DOUBLE,
+--   businessId TEXT,
+--   numreviews INT,
+--   totalscore INT,
+--   promotext TEXT,
+--   promoscore INT,
+--   PRIMARY KEY ((dish, citystate),businessid)
+-- );
+
+
 DROP TABLE IF EXISTS dishes;
 CREATE TABLE dishes (
   citystate TEXT,
@@ -18,10 +32,9 @@ CREATE TABLE dishes (
   totalscore INT,
   promotext TEXT,
   promoscore INT,
-  PRIMARY KEY ((dish, citystate),businessid)
+  PRIMARY KEY (citystate, dish)
 );
-
---CREATE INDEX ON dishes (avgrating);
+CREATE INDEX ON dishes (businessid);
 
 
 DROP TABLE IF EXISTS businesses;
