@@ -96,7 +96,7 @@ class Reviews {
                 map(_.get(classOf[SentimentCoreAnnotations.SentimentAnnotatedTree])).
                 map(RNNCoreAnnotations.getPredictedClass(_))
               score = scoreArray(0) + 1
-              break
+              //break don't break so we get last item in sentence (optimally we should process all of the terms)
             }
           }}
 

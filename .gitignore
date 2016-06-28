@@ -27,5 +27,11 @@ input/yelp_academic_dataset_business.json
 code/SparkBatch/input/yelpbusinessmin.json
 code/SparkBatch/input/yelpreviewmin.json
 code/SparkBatch/input/yelptipmin.json
+SparkBatch/input/yelpbusinessmin.json
+SparkBatch/input/yelpreviewmin.json
+SparkBatch/input/yelptipmin.json
+SparkWeb/.idea
+SparkBatch/.idea
 derby.log
 metastore_db
+SparkBatch/target

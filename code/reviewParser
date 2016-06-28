@@ -111,7 +111,7 @@ def getScores (reviews: org.apache.spark.sql.DataFrame, items: scala.collection.
           map(_.get(classOf[SentimentCoreAnnotations.SentimentAnnotatedTree])).
           map(RNNCoreAnnotations.getPredictedClass(_))
           score = scoreArray(0) + 1
-          break
+          //break don't break, instead get last item in sentence (optimally should get all)
        }
     }}
 

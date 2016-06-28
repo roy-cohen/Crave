@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <title>Crave</title>
+</head>
+
+<style>
+
+
+
+</style>
+
+<body >
+
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-4" >
+
+        </div>
+        <div class="col-md-4" >
+            <h1>Crave</h1><br />
+            <fieldset>
+                <legend></legend>
+                <div style="display:block;" >
+                    <!--<label for="cityInput">Where you at?</label>-->
+                    <input name="cityInput" list="cityList" type="text" id="cityInput">
+                    <datalist id="cityList"></datalist><br><br>
+
+
+                    <!--<label for="dishInput">I crave</label>-->
+                    <input name="dishInput" list="dishList" type="text" id="dishInput">
+                    <datalist id="dishList"></datalist>
+                    <br><br><input type="button" id="searchDishes" value="GO"  ><br /><br />
+                </div>
+            </fieldset>
+
+                <legend></legend>
+            <div id="recommendations" style="display:none">
+                Top <span id="numResults"></span> Results for <div id="searchTerm" style="display:inline"></div>:
+                <ul></ul>
+            </div>
+
+            </fieldset>
+        </div>
+        <div class="col-md-4" style="background-color:lightblue;">
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+function loadList(dataList, input, placeHolder, error, file) {
+     // Create a new XMLHttpRequest.
+    var request = new XMLHttpRequest();
+
+    // Handle state changes for the request.
+    request.onreadystatechange = function(response) {
+
+      if (request.readyState === 4) {
+        if (request.status === 200) {
+          // Parse the JSON
+          var jsonOptions = JSON.parse(request.responseText);
+
+          // Loop over the JSON array.
+          jsonOptions.forEach(function(item) {
+            // Create a new <option> element.
+            var option = document.createElement('option');
+            // Set the value using the item in the JSON array.
+            option.value = item;
+            // Add the <option> element to the <datalist>.
+            dataList.appendChild(option);
+          });
+
+          // Update the placeholder text.
+          input.placeholder = placeHolder;
+        } else {
+          // An error occured :(
+          input.placeholder = error;
+        }
+      }
+    };
+
+    // Update the placeholder text.
+    input.placeholder = "Loading options...";
+
+    // Set up and make the request.
+    request.open('GET', file, true);
+    request.send();
+}
+
+$(document).ready(function () {
+
+    //load cities
+    var dataList = document.getElementById('cityList');
+    var input = document.getElementById('cityInput');
+    var placeHolder = "Where you at?";
+    var error = "Couldn't load cities :(";
+    var file = 'crave/cities.json';
+    loadList(dataList, input, placeHolder, error, file);
+
+    //load dishes
+    dataList = document.getElementById('dishList');
+    input = document.getElementById('dishInput');
+    placeHolder = "What you crave?";
+    error = "Couldn't load dishes :(";
+    file = 'crave/dishes.json';
+    loadList(dataList, input, placeHolder, error, file);
+
+
+
+  $('#searchDishes').click(function () {
+
+    //var recommendations = $('#recommendations');
+    $('#recommendations ul').empty()
+    $('#recommendations').hide();
+
+    var dish = $('#dishInput').val()
+    var jsonUrl = "/crave/searchDishes.json?city=" + $('#cityInput').val() +  "&dish=" + $('#dishInput').val()
+
+    $.getJSON(jsonUrl, function(data) {
+
+      //console.log(data);
+
+      var reviews = data.map(function (review) {
+
+        var item = '<li><div id="' + review.businessid + '">';
+         item += 'Average Score: ' + review.avgrating;
+         item += '<br>Number of reviews for this dish: ' + review.dishnumreviews;
+         item += '<br>Promo text: ' + review.promotext;
+         item += '<br>Name: ' + review.name;
+         item += '<br>Address: ' + review.address;
+         item += '<br>Yelp review count: ' + review.restaurantnumreviews;
+         item += '<br>Yelp stars: ' + review.stars;
+         item += '</div></li>';
+        $("#recommendations ul").append(item);
+      });
+//"businessid","avgrating","numreviews","promoscore", "promotext", "totalscore"
+      //recommendations.empty();
+
+      if (reviews.length) {
+        $('#recommendations').show();
+        $("#searchTerm").text(dish);
+        $("#numResults").text(reviews.length);
+        //$("#recommendations").css("display", "block");
+      }
+    });
+
+    return false;
+
+  });
+});
+
+</script>
+
+
+
+</body>
+</html>
