@@ -13,3 +13,56 @@ spark-shell   --packages $PKGS   --jars stanford-english-corenlp-2016-01-10-mode
 spark-shell   --packages $PKGS   --jars stanford-english-corenlp-2016-01-10-models.jar --conf "spark.cassandra.connection.host=172.31.59.181"  --files guava-16.0.1.jar --driver-class-path guava-16.0.1.jar --conf spark.executor.extraClassPath=guava-16.0.1.jar
 spark-shell   --packages $PKGS   --jars stanford-english-corenlp-2016-01-10-models.jar --conf "spark.cassandra.connection.host=172.31.59.181"  --files guava-16.0.1.jar --conf spark.executor.extraClassPath=guava-16.0.1.jar
 //spark-shell --packages edu.stanford.nlp:stanford-corenlp:3.6.0,com.google.protobuf:protobuf-java:2.6.1 --jars stanford-english-corenlp-2016-01-10-models.jar 
+
+
+kafka
+from kafka folder, start zookeper
+/usr/local/lib/kafka_2.10-0.8.2.1/bin/zookeeper-server-start.sh config/zookeeper.properties
+start kafka server
+./bin/kafka-server-start.sh config/server.properties
+run kafka consumer
+run kafka producer
+
+
+general setup:
+
+EMR installation (switch environment to java 1.8)
+[
+    {
+        "Classification": "hadoop-env", 
+        "Configurations": [
+            {
+                "Classification": "export", 
+                "Configurations": [], 
+                "Properties": {
+                    "JAVA_HOME": "/usr/lib/jvm/java-1.8.0"
+                }
+            }
+        ], 
+        "Properties": {}
+    }, 
+    {
+        "Classification": "spark-env", 
+        "Configurations": [
+            {
+                "Classification": "export", 
+                "Configurations": [], 
+                "Properties": {
+                    "JAVA_HOME": "/usr/lib/jvm/java-1.8.0"
+                }
+            }
+        ], 
+        "Properties": {}
+    }
+]
+
+to switch to jre 1.8
+sudo /usr/sbin/alternatives --config java
+
+install cassandra copy tz file there and unzip 
+open ports on main cluster
+7199 - JMX (was 8080 pre Cassandra 0.8.xx)
+7000 - Internode communication (not used if TLS enabled)
+7001 - TLS Internode communication (used if TLS enabled)
+9160 - Thrift client API
+9042 - CQL native transport port

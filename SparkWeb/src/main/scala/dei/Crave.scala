@@ -9,7 +9,7 @@ object Crave {
   def main(args : Array[String]): Unit = {
 
     // Parse args
-    val DEFAULT_RESOURCE_ROOT = System.getProperty("user.dir") + "/static/index.html"
+    val DEFAULT_RESOURCE_ROOT = System.getProperty("user.dir") + "/static/"
     val DEFAULT_PORT = 8089
     val USAGE = "USAGE: mvn exec:java -Dexec.mainClass=\"dei.Crave\"";
 
@@ -25,6 +25,7 @@ object Crave {
     // Setup application "context" (handler tree in jetty speak)
     val contextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS)
     contextHandler.setResourceBase(DEFAULT_RESOURCE_ROOT)
+
 
     // Path in URL to match
     contextHandler.setContextPath("/")

@@ -1,0 +1,177 @@
+bento:bento
+beer:beer
+bread:bread
+bread:flatbread
+bread:toast
+brisket:brisket
+bruschetta:bruschetta
+burger:burger
+burger:cheeseburger
+burger:hamburger
+burger:patty melt
+burrito:burrito
+burrito:chimichanga
+cake:brownie
+cake:cake
+calzone:calzone
+nuggets:nugget
+tenders:finger
+tenders:strip
+tenders:tender
+chop suey:chop suey
+chow mein:chow mein
+chowder:chowder
+cookie:cookie
+crepe:crepe
+curry:curry
+curry:massaman
+curry:panang
+dim sum:dim sum
+dip:dip
+dip:guacamole
+dip:hummus
+dip:salsa
+dip:spinach and artichoke
+dosa:dosa
+dumpling:dumpling
+dumpling:wonton
+eggs:benedict
+eggs:egg
+eggs:florentine
+eggs:huevos rancheros
+eggs:omelette
+eggs:ranchero
+enchilada:enchilada
+falafel:falafel
+fettuccine:fettuccine
+foo young:foo young
+foo young:fu yung
+francese:francese
+french toast:french toast
+fries:fries
+fruit:fruit
+general tso:general tso
+gyro:gyro
+hibachi:hibachi
+hot dog:hot dog
+katsu:katsu
+kebab:kebab
+korma:korma
+kung pao:kung pao
+lasagna:lasagna
+margaritas:margarita
+macaroni:ziti
+macaroni:macaroni
+marsala:marsala
+masala:masala
+meatball:meatball
+meatloaf:meatloaf
+mei fun:mei fun
+milkshake:milkshake
+milkshake:shake
+milkshake:smoothie
+moo goo gai pan:moo goo gai pan
+naan:naan
+noodles:chow fun
+noodles:lo mein
+noodles:noodle
+noodles:pad thai
+noodles:pan fried
+noodles:ramen
+noodles:udon
+pancakes:pancake
+paneer:paneer
+parmesan:parm
+parmesan:parmesan
+parmesan:parmigiana
+pasta:angel hair
+pasta:carbonara
+pasta:linguine
+pasta:manicotti
+pasta:mostaccioli
+pasta:pasta
+pasta:penne
+pasta:ravioli
+pasta:rigatoni
+pasta:tortellini
+pastry:baklava
+pastry:croissant
+pastry:muffin
+philly:philly
+piccata:piccata
+pie:pie
+pita:pita
+pizza:pizza
+pork:pork
+prosciutto:prosciutto
+pudding:pudding
+quesadilla:quesadilla
+relleno:relleno
+ribs:ribs	
+rice:biryani
+rice:risotto
+roti:roti
+salad:coleslaw
+salad:salad
+sandwich:club
+sandwich:hero
+sandwich:hoagie
+sandwich:panini
+sandwich:reuben 
+sandwich:sandwich
+sandwich:sub
+sandwich:wrap
+sashimi:sashimi
+seafood:bass
+seafood:calamari
+seafood:crab
+seafood:fish
+seafood:flounder
+seafood:lobster
+seafood:prawns
+seafood:seafood
+seafood:shrimp
+seafood:snapper
+shawarma:shawarma
+soup:egg drop
+soup:french onion
+soup:hot and sour
+soup:lentil
+soup:minestrone
+soup|noodles:pho
+soup|noodles:ramen
+soup:soup
+soup:tom yum
+souvlaki:souvlaki
+spaghetti:spaghetti
+steak:black angus
+steak:carne asada
+steak:filet mignon
+steak:new york strip
+steak:prime rib
+steak:rib eye
+steak:sirloin
+steak:steak
+stew:stew
+stir fry:stir fry
+stromboli:stromboli
+sushi:maguro
+sushi:maki
+sushi:octopus roll
+sushi:roe
+sushi:salmon roll
+sushi:sushi
+sushi:tataki
+sushi:tempura roll
+sushi:tempura udon
+sushi:tuna roll
+taco:taco
+tandoori:tandoori
+teriyaki:teriyaki
+tikka:tikka
+torta:torta
+tortilla:nacho
+tortilla:tortilla
+vindaloo:vindaloo
+waffle:waffle
+wine:wine

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <title>Crave</title>
+</head>
+
+<style>
+
+
+
+</style>
+
+<body >
+
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-4" >
+
+        </div>
+        <div class="col-md-4" >
+            <h1>Crave</h1><br />
+            <fieldset>
+                <legend></legend>
+                <div id="recommendations" style="display:none">
+                    Top <span id="numResults"></span> dishes for <div id="searchTerm" style="display:inline"></div>:
+                    <ul></ul>
+                </div>
+            </fieldset>
+
+            <legend></legend>
+
+
+            </fieldset>
+        </div>
+        <div class="col-md-4" style="background-color:lightblue;">
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+(function($){
+    $.getQuery = function( query ) {
+        query = query.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+        var expr = "[\\?&]"+query+"=([^&#]*)";
+        var regex = new RegExp( expr );
+        var results = regex.exec( window.location.href );
+        if( results !== null ) {
+            return results[1];
+            return decodeURIComponent(results[1].replace(/\+/g, " "));
+        } else {
+            return false;
+        }
+    };
+})(jQuery);
+
+$(document).ready(function () {
+
+    var city = $.getQuery('city');
+    var id = $.getQuery('id');
+
+    $('#recommendations ul').empty()
+    $('#recommendations').hide();
+
+    var jsonUrl = "/crave/getTopDishesForRestaurant.json?city=" + city +  "&id=" + id
+
+    $.getJSON(jsonUrl, function(data) {
+
+      //console.log(data);
+      var restaurantName = "";
+      var address = "";
+      var yelpreviewcount = 0;
+      var yelpstars = 0;
+      var reviews = data.map(function (review) {
+
+        restaurantName = review.name;
+        address = review.address;
+        yelpreviewcount = review.restaurantnumreviews;
+        yelpstars = review.stars;
+
+        var item = '<li><div id="' + review.businessid + '">';
+         item += 'Dish: ' + review.dish;
+         item += '<br>Crave Score: ' + review.avgrating;
+         item += '<br>Number of reviews for this dish: ' + review.dishnumreviews;
+         item += '<br>Promo text: ' + review.promotext;
+         item += '</div></li>';
+        $("#recommendations ul").append(item);
+      });
+
+      //recommendations.empty();
+
+      if (reviews.length) {
+        $('#recommendations').show();
+        $("#searchTerm").text(restaurantName);
+        $("#numResults").text(reviews.length);
+        //$("#recommendations").css("display", "block");
+      }
+
+  });
+});
+
+</script>
+
+
+
+</body>
+</html>

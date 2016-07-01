@@ -12,7 +12,20 @@
 
 <style>
 
+.promo{
+    font-style: italic;
+    opacity: .5;
+}
 
+#recommendations ul{
+    list-style-type: none;
+    padding-left:0px;
+}
+
+#recommendations li{
+    margin-top:20px;
+    margin-bottom:20px;
+}
 
 </style>
 
@@ -125,7 +138,8 @@ $(document).ready(function () {
     $('#recommendations').hide();
 
     var dish = $('#dishInput').val()
-    var jsonUrl = "/crave/searchDishes.json?city=" + $('#cityInput').val() +  "&dish=" + $('#dishInput').val()
+    var city = $('#cityInput').val().replace(",","").replace(" ","")
+    var jsonUrl = "/crave/searchDishes.json?city=" + city +  "&dish=" + dish
 
     $.getJSON(jsonUrl, function(data) {
 
@@ -133,14 +147,14 @@ $(document).ready(function () {
 
       var reviews = data.map(function (review) {
 
-        var item = '<li><div id="' + review.businessid + '">';
-         item += 'Average Score: ' + review.avgrating;
-         item += '<br>Number of reviews for this dish: ' + review.dishnumreviews;
-         item += '<br>Promo text: ' + review.promotext;
-         item += '<br>Name: ' + review.name;
-         item += '<br>Address: ' + review.address;
-         item += '<br>Yelp review count: ' + review.restaurantnumreviews;
-         item += '<br>Yelp stars: ' + review.stars;
+        var item = '<li><div id="' + review.businessid + '"></div>';
+         item += '<div>Crave Score: ' + review.avgrating + '</div>';
+         item += '<div>' + review.dishnumreviews + ' reviews</div>';
+         item += '<div class="promo">' + review.promotext + '</div>';
+         item += '<div class="restaurant"><a href="restaurant.html?city=' + city +'&id=' + review.businessid +'">Name: ' + review.name + '</a></div>';
+         item += '<div>Address: ' + review.address + '</div>';
+         item += '<div>Yelp reviews: ' + review.restaurantnumreviews + '</div>';
+         item += '<div>Yelp stars: ' + review.stars + '</div>';
          item += '</div></li>';
         $("#recommendations ul").append(item);
       });

@@ -10,13 +10,15 @@ import org.scalatra.json.JacksonJsonSupport
 import com.datastax.spark.connector._
 import org.apache.spark.sql.{DataFrame, DataFrameHolder, Row}
 import org.apache.spark.sql.types._
+import com.datastax.spark.connector.cql.CassandraConnector
+import scala.collection.JavaConversions._
 
 
 
 class CraveServlet extends ScalatraServlet with JacksonJsonSupport {
   protected implicit val jsonFormats: Formats = DefaultFormats
-  case class DataPoint(businessid: String, avgrating: Double, dishnumreviews: Integer, promotext:String, address:String, name:String, restaurantnumreviews:Int, stars:Double) extends java.io.Serializable
-  //case class MyRow(key: String, value: Long)
+  case class DataPoint(dish: String, businessid: String, avgrating: Double, dishnumreviews: Integer, promotext:String, address:String, name:String, restaurantnumreviews:Int, stars:Double) extends java.io.Serializable
+  case class BusinessObj(id: String, address: String, name: String, reviewcount: Int, stars: Double)
 
   val conf = new SparkConf(true).
     set("spark.cassandra.connection.host", "127.0.0.1").
@@ -31,15 +33,11 @@ class CraveServlet extends ScalatraServlet with JacksonJsonSupport {
   val categoryfile = System.getProperty("user.dir") + "/static/categories.txt";
   val categoryItems = getCategories(categoryfile);
 
-  ///Users/roycohen/capstone/DishRecommender/SparkWeb/static/categories.txt
-
+  val connector = CassandraConnector(sc.getConf)
 
 
   before() {
-    //contentType = "text/json"
     contentType = formats("json")
-    //contentType = "application/json"
-
   }
 
   get ("/") {
@@ -58,169 +56,129 @@ class CraveServlet extends ScalatraServlet with JacksonJsonSupport {
     cities
   }
 
+  get("/getTopDishesByCity.json") {
+
+    val citystate = params.get("city").get.toString.replaceAll(",", "").replaceAll(" ", "")
+    val recommendations = getTopDishesByCity(citystate)
+    recommendations
+  }
+
+  get("/getTopDishesForRestaurant.json") {
+
+    val citystate = params.get("city").get.toString.replaceAll(",", "").replaceAll(" ", "")
+    val businessid = params.get("id").get.toString
+    val recommendations = getTopDishesForRestaurant(citystate, businessid)
+    recommendations
+  }
+
   get("/searchDishes.json") {
 
     val citystate = params.get("city").get.toString.replaceAll(",","").replaceAll(" ","")
     val dish = params.get("dish").get.toString
-    //var results = Array(com.datastax.spark.connector.rdd.CassandraTableScanRDD)
 
+    val dishes = categoryItems(dish).mkString("'", "','", "'")
+    val recommendations = getDishes(citystate, dishes)
 
-    if (categoryItems.contains(dish)){
-//      //this item is a category, so do multiple dish search
-      //val dishes = categoryItems(dish).toList
-      val dishes = categoryItems(dish).mkString("'", "','", "'")
-//      val results = dishesRDD.select("businessid","avgrating","numreviews","promoscore", "promotext", "totalscore").
-//        where("citystate = ? AND dish IN ?",citystate, dishes)
-//
-//      val topreviews = results.sortBy(row => -row.getDouble("avgrating")).take(5).map(row => {
-//
-//        val id = row.getString("businessid")
-//        val avgrating = row.getDouble("avgrating")
-//        val numreviews = row.getInt("numreviews")
-//        val promoscore = row.getInt("promoscore")
-//        val promotext = row.getString("promotext")
-//        val totalscore = row.getInt("totalscore")
-//
-//        (id,avgrating,numreviews,promoscore,promotext,totalscore)
-//
-//      }).toList
-
-//      val businessIds = topreviews.map(x => x.businessid).toList
-//      val businesses = businessRDD.select("businessid","full_address","name","reviewcount", "stars").
-//      where("citystate = ? AND businessid IN ?", citystate, businessIds)
-//      join business info with review on business id and return to client
-
-
-      //topreviews
-      val dishesDF = sqlContext.
-        read.
-        format("org.apache.spark.sql.cassandra").
-        options(Map("table" -> "dishes", "keyspace" -> "dishes_db")).
-        load()
-      dishesDF.registerTempTable("dishes")
-
-      val businessDF = sqlContext.
-        read.
-        format("org.apache.spark.sql.cassandra").
-        options(Map("table" -> "businesses", "keyspace" -> "dishes_db")).
-        load()
-      businessDF.registerTempTable("businesses")
-
-
-      val dishQuery = "SELECT businessid, avgrating, numreviews, promotext FROM dishes WHERE citystate = '" + citystate +  "' AND dish IN (" + dishes + ")"
-      val dishesFilteredDF: DataFrame = sqlContext.sql(dishQuery)
-
-      val businessQuery = "SELECT businessid, full_address, name, reviewcount, stars FROM businesses WHERE citystate = '" + citystate + "'"
-      val businessFilteredDF: DataFrame = sqlContext.sql(businessQuery)
-
-      val joined = dishesFilteredDF.join(businessFilteredDF, dishesFilteredDF("businessid") === businessFilteredDF("businessid")).drop(businessFilteredDF("businessid"))
-
-      val sorted = joined.rdd.sortBy(row => -row.getAs[Double]("avgrating"))
-
-      val recommendations = sorted.take(5).map(row => {
-        val id = row.getAs[String]("businessid")
-        val avgrating = row.getAs[Double]("avgrating")
-        val dishnumreviews = row.getAs[Int]("numreviews")
-        val promotext = row.getAs[String]("promotext")
-        val address = row.getAs[String]("full_address").replaceAll("\\\\n", " ")
-        val name = row.getAs[String]("name")
-        val restaurantnumreviews = row.getAs[Int]("reviewcount")
-        val stars = row.getAs[Double]("stars")
-
-        new DataPoint(id, avgrating, dishnumreviews, promotext, address, name, restaurantnumreviews, stars)
-      }).toList
-
-      recommendations
-
-    }else{
-      //search for specific dish
-
-//      val reviewsRDD = dishesRDD.select("businessid","avgrating","numreviews","promoscore", "promotext", "totalscore").
-//        where("citystate = ? AND dish = ?",citystate, dish).map(row => {
-//
-//          val id = row.getString("businessid")
-//          val avgrating = row.getDouble("avgrating")
-//          val numreviews = row.getInt("numreviews")
-//          val promoscore = row.getInt("promoscore")
-//          val promotext = row.getString("promotext")
-//          val totalscore = row.getInt("totalscore")
-//
-//        Row(id, avgrating, numreviews, promoscore, promotext, totalscore)
-//      })
-
-
-      val dishesDF = sqlContext.
-        read.
-        format("org.apache.spark.sql.cassandra").
-        options(Map("table" -> "dishes", "keyspace" -> "dishes_db")).
-        load()
-      dishesDF.registerTempTable("dishes")
-
-      val businessDF = sqlContext.
-        read.
-        format("org.apache.spark.sql.cassandra").
-        options(Map("table" -> "businesses", "keyspace" -> "dishes_db")).
-        load()
-      businessDF.registerTempTable("businesses")
-      businessDF.cache()
-
-      val dishesFilteredDF: DataFrame = sqlContext.sql("SELECT businessid, avgrating, numreviews, promotext FROM dishes WHERE citystate = '" + citystate +  "' AND dish = '" + dish + "'")
-      val businessFilteredDF: DataFrame = sqlContext.sql("SELECT businessid, full_address, name, reviewcount, stars FROM businesses WHERE citystate = '" + citystate + "'")
-
-      val joined = dishesFilteredDF.join(businessFilteredDF, dishesFilteredDF("businessid") === businessFilteredDF("businessid")).drop(businessFilteredDF("businessid"))
-
-      val sorted = joined.rdd.sortBy(row => -row.getAs[Double]("avgrating"))
-
-      val recommendations = sorted.take(5).map(row => {
-        val id = row.getAs[String]("businessid")
-        val avgrating = row.getAs[Double]("avgrating")
-        val dishnumreviews = row.getAs[Int]("numreviews")
-        val promotext = row.getAs[String]("promotext")
-        val address = row.getAs[String]("full_address")
-        val name = row.getAs[String]("name")
-        val restaurantnumreviews = row.getAs[Int]("reviewcount")
-        val stars = row.getAs[Double]("stars")
-
-        new DataPoint(id, avgrating, dishnumreviews, promotext, address, name, restaurantnumreviews, stars)
-      }).toList
-
-      recommendations
-//      val topreviews = reviewsRDD.sortBy(row => -row.getDouble("avgrating")).take(5).map(row => {
-//
-//        val id = row.getString("businessid")
-//        val avgrating = row.getDouble("avgrating")
-//        val numreviews = row.getInt("numreviews")
-//        val promoscore = row.getInt("promoscore")
-//        val promotext = row.getString("promotext")
-//        val totalscore = row.getInt("totalscore")
-//
-//        new Review(id,avgrating,numreviews,promoscore,promotext,totalscore)
-//
-//      })
-
-//      val reviewSchema = StructType(Array(StructField("businessid",StringType,true),StructField("avgrating",DoubleType,true),StructField("totalscore",IntegerType,true),StructField("numreviews",IntegerType,true),StructField("promotext",StringType,true),StructField("promoscore",IntegerType,true)))
-//      val reviewsToStore = sqlContext.createDataFrame(reviewsRDD, reviewSchema)
-//
-//      val businessIds = topreviews.map(x => x.businessid).toList
-//      val businesses = businessRDD.select("businessid","full_address","name","reviewcount", "stars").
-//        where("citystate = ? AND businessid IN ?", citystate, businessIds).toDF
-//      //      join business info with review on business id and return to client
-//
-//
-//      topreviews
-    }
-
-    //println(citystate)
-    //println(dish)
-
-    //results(0).toMap
-    //val dp = new DataPoint("survived", survived)
-    //dp
-    //results
+    recommendations
   }
 
   override def render(value: JValue)(implicit formats: Formats): JValue = value.camelizeKeys
 
+  def getBusinessMap(rows: java.util.List[com.datastax.driver.core.Row] ) = {
+
+    val businessMap = collection.mutable.Map[String, BusinessObj]()
+    rows.map(row => {
+      val id = row.getString("businessid")
+      val address = row.getString("full_address").replaceAll("\\\\n", " ")
+      val name = row.getString("name")
+      val reviewcount = row.getInt("reviewcount")
+      val stars = row.getDouble("stars")
+      businessMap.put(id, new BusinessObj(id,address,name,reviewcount,stars))
+    })
+
+    businessMap
+  }
+
+  def getRecommendations(top5: scala.collection.mutable.Buffer[com.datastax.driver.core.Row], businessMap: scala.collection.mutable.Map[String,BusinessObj]) = {
+
+    val recommendations = top5.map(row => {
+      val dish = row.getString("dish")
+      val id = row.getString("businessid")
+      val avgrating = row.getDouble("avgrating")
+      val dishnumreviews = row.getInt("numreviews")
+      val promotext = row.getString("promotext")
+      val address = businessMap(id).address
+      val name = businessMap(id).name
+      val restaurantnumreviews = businessMap(id).reviewcount
+      val stars = businessMap(id).stars
+
+      new DataPoint(dish, id, avgrating, dishnumreviews, promotext, address, name, restaurantnumreviews, stars)
+    }).toList
+
+    recommendations
+  }
+
+  def getDishes(citystate: String, dishes: String) = {
+
+      val session = connector.openSession
+
+      val reviews = session.execute("SELECT dish, businessid, avgrating, numreviews, promotext FROM dishes_db.dishes WHERE citystate = ? AND dish IN (" + dishes +")", citystate)
+      val rows = reviews.all
+
+      val top5 = rows.sortBy(row => -row.getDouble("avgrating")).take(5)
+
+      val businessids = top5.map(row => row.getString("businessid")).mkString("'", "','", "'")
+      val businesses = session.execute("SELECT businessid, full_address, name, reviewcount, stars FROM dishes_db.businesses WHERE citystate = ? AND businessid IN (" + businessids + ")", citystate)
+      val bRows = businesses.all
+
+      // Close session
+      session.close
+
+      val businessMap = getBusinessMap(bRows)
+      val recommendations = getRecommendations(top5, businessMap)
+      recommendations
+  }
+
+  def getTopDishesByCity(citystate:String) = {
+
+    val session = connector.openSession
+
+    val reviews = session.execute("SELECT dish, businessid, avgrating, numreviews, promotext FROM dishes_db.dishes WHERE citystate = ?", citystate)
+    val rows = reviews.all
+
+    val top5 = rows.sortBy(row => -row.getDouble("avgrating")).take(5)
+
+    val businessids = top5.map(row => row.getString("businessid")).mkString("'","','","'")
+    val businesses = session.execute("SELECT businessid, full_address, name, reviewcount, stars FROM dishes_db.businesses WHERE citystate = ? AND businessid IN (" + businessids + ")", citystate)
+    val bRows = businesses.all
+
+    // Close session
+    session.close
+
+    val businessMap = getBusinessMap(bRows)
+    val recommendations = getRecommendations(top5, businessMap)
+    recommendations
+  }
+
+  def getTopDishesForRestaurant(citystate:String, businessid: String) = {
+
+    val session = connector.openSession
+
+    val reviews = session.execute("SELECT dish, businessid, avgrating, numreviews, promotext FROM dishes_db.dishes WHERE citystate = ? AND businessid = ?", citystate, businessid)
+    val rows = reviews.all
+
+    val top5 = rows.sortBy(row => -row.getDouble("avgrating")).take(5)
+
+    val businesses = session.execute("SELECT businessid, full_address, name, reviewcount, stars FROM dishes_db.businesses WHERE citystate = ? AND businessid = ?", citystate, businessid)
+    val bRows = businesses.all
+
+    // Close session
+    session.close
+
+    val businessMap = getBusinessMap(bRows)
+    val recommendations = getRecommendations(top5, businessMap)
+    recommendations
+  }
 
   def getCategories(fileName: String) = {
 

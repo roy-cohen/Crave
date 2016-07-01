@@ -36,5 +36,10 @@ SparkBatch/.idea
 derby.log
 metastore_db
 SparkBatch/target
+SparkWeb/target
 SparkBatch/stanford-corenlp-full-2015-12-09/
 SparkBatch/stanford-english-corenlp-2016-01-10-models.jar
+KafkaProducer/.idea
+KafkaProducer/target
+KafkaConsumer/.idea
+KafkaConsumer/checkpoint
