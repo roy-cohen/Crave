@@ -7,70 +7,140 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="http://localhost:8089/style.css">
+
     <title>Crave</title>
 </head>
 
-<style>
-
-.promo{
-    font-style: italic;
-    opacity: .5;
-}
-
-#recommendations ul{
-    list-style-type: none;
-    padding-left:0px;
-}
-
-#recommendations li{
-    margin-top:20px;
-    margin-bottom:20px;
-}
-
-</style>
 
 <body >
 
 
-<div class="container-fluid">
+<div class="container-fluid" id="main-container">
 
     <div class="row">
-        <div class="col-md-4" >
-
-        </div>
-        <div class="col-md-4" >
-            <h1>Crave</h1><br />
+        <!--<div class="col-md-4" ></div>-->
+        <div> <!--class="col-md-4" >-->
+            <!--<h1>Crave</h1><br />-->
             <fieldset>
-                <legend></legend>
-                <div style="display:block;" >
+                <!--<legend></legend>-->
+                <div id="inputDiv">
                     <!--<label for="cityInput">Where you at?</label>-->
-                    <input name="cityInput" list="cityList" type="text" id="cityInput">
+                    <input name="cityInput" list="cityList" type="text" id="cityInput" class="inputText">
                     <datalist id="cityList"></datalist><br><br>
 
 
                     <!--<label for="dishInput">I crave</label>-->
-                    <input name="dishInput" list="dishList" type="text" id="dishInput">
+                    <input name="dishInput" list="dishList" type="text" id="dishInput" class="inputText">
                     <datalist id="dishList"></datalist>
-                    <br><br><input type="button" id="searchDishes" value="GO"  ><br /><br />
+                    <!--<br><br><input type="button" id="searchDishes" value="GO"  ><br /><br />-->
                 </div>
             </fieldset>
 
-                <legend></legend>
+                <!--<legend></legend>-->
+            <div id="trends">
+                <span><img id="trendImg" src="http://localhost:8089/trending.png"></span>
+                <span id="trendHdr">Trending</span>
+                <hr>
+                <ul id="trendList"></ul>
+            </div>
+
             <div id="recommendations" style="display:none">
-                Top <span id="numResults"></span> Results for <div id="searchTerm" style="display:inline"></div>:
-                <ul></ul>
+                <!--Top <span id="numResults"></span> Results for <div id="searchTerm" ></div>:-->
+                <ul id="recommendationList"></ul>
             </div>
 
             </fieldset>
         </div>
-        <div class="col-md-4" style="background-color:lightblue;">
-
-        </div>
+        <!--<div class="col-md-4" ></div>-->
     </div>
 </div>
 
 
 <script>
+
+function loadTrends() {
+
+    $('#trends ul').empty();
+
+    $('#cityInput').val("Homestead, PA")
+    var city = $('#cityInput').val().replace(",","").replace(" ","");
+
+    var jsonUrl = "/crave/getTopDishesByCity.json?city=" + city;
+
+    $.getJSON(jsonUrl, function(data) {
+
+      var reviews = data.map(function (review) {
+
+        var promoShort = '"' + review.promotext.substring(0,45) + '..."';
+        var item = '<li><div class="trendListing" id="' + review.businessid + '">';
+         item += '<span class="trendDish">' + review.dish + '</span><span class="trendRestName"> - <a href="restaurant.html?city=' + city +'&id=' + review.businessid +'">' + review.name +'</a></span>';
+         <!--item += '<div>Crave Score: ' + review.avgrating + '</div>';-->
+         <!--item += '<div>' + review.dishnumreviews + ' reviews</div>';-->
+         item += '<div class="trendPromo">' + promoShort + '</div>';
+         <!--item += '<div class="restaurant"><a href="restaurant.html?city=' + city +'&id=' + review.businessid +'">Name: ' + review.name + '</a></div>';-->
+         <!--item += '<div>Address: ' + review.address + '</div>';-->
+         <!--item += '<div>Yelp reviews: ' + review.restaurantnumreviews + '</div>';-->
+         <!--item += '<div>Yelp stars: ' + review.stars + '</div>';-->
+         item += '</div></li>';
+        $("#trends ul").append(item);
+      });
+
+    })
+}
+
+function loadRecommendations() {
+
+    //var recommendations = $('#recommendations');
+    $('#recommendations ul').empty()
+    $('#recommendations').hide();
+
+    var dish = $('#dishInput').val()
+    var city = $('#cityInput').val().replace(",","").replace(" ","")
+    var jsonUrl = "/crave/searchDishes.json?city=" + city +  "&dish=" + dish
+
+    $.getJSON(jsonUrl, function(data) {
+
+      //console.log(data);
+
+      var lastHR = "";
+
+      var reviews = data.map(function (review) {
+
+        var promoShort = '"' + review.promotext.substring(0,35) + '..."';
+        var item = '<li>';
+         <!--item += '<div id="' + review.businessid + '"></div>';-->
+         item += '<div class="reccDish">' + review.dish + '</div>';
+         item += '<div class="reccScoreDiv"><img class="reccScoreImg" src="http://localhost:8089/score.png" /><div class="reccScore">' + review.avgrating + '</div></div>';
+         item += '<div class="reccRestName"><a href="restaurant.html?city=' + city +'&id=' + review.businessid +'">' + review.name + '</a></div>';
+         item += '<div class="reccPromo">' + promoShort + '</div>';
+
+         <!--item += '<div>' + review.dishnumreviews + ' reviews</div>';-->
+
+         <!--item += '<div>Address: ' + review.address + '</div>';-->
+         <!--item += '<div>Yelp reviews: ' + review.restaurantnumreviews + '</div>';-->
+         <!--item += '<div>Yelp stars: ' + review.stars + '</div>';-->
+
+         item += '<hr id="hr' + review.businessid + '"></div></li>';
+        $("#recommendations ul").append(item);
+
+        lastHR = "#hr" + review.businessid;
+      });
+
+      $(lastHR).hide();
+
+      //recommendations.empty();
+
+      if (reviews.length) {
+        $('#trends').hide();
+        $('#inputDiv').css('margin-top','125px');
+        $('#recommendations').show();
+        $("#searchTerm").text(dish);
+        $("#numResults").text(reviews.length);
+        $("#main-container").css('background-image', 'url("http://localhost:8089/bgresults.png")');
+      }
+    });
+}
 
 function loadList(dataList, input, placeHolder, error, file) {
      // Create a new XMLHttpRequest.
@@ -116,7 +186,7 @@ $(document).ready(function () {
     //load cities
     var dataList = document.getElementById('cityList');
     var input = document.getElementById('cityInput');
-    var placeHolder = "Where you at?";
+    var placeHolder = "Where are you?";
     var error = "Couldn't load cities :(";
     var file = 'crave/cities.json';
     loadList(dataList, input, placeHolder, error, file);
@@ -124,54 +194,20 @@ $(document).ready(function () {
     //load dishes
     dataList = document.getElementById('dishList');
     input = document.getElementById('dishInput');
-    placeHolder = "What you crave?";
+    placeHolder = "What do you crave?";
     error = "Couldn't load dishes :(";
     file = 'crave/dishes.json';
     loadList(dataList, input, placeHolder, error, file);
 
+    //load trends
+    loadTrends();
 
-
-  $('#searchDishes').click(function () {
-
-    //var recommendations = $('#recommendations');
-    $('#recommendations ul').empty()
-    $('#recommendations').hide();
-
-    var dish = $('#dishInput').val()
-    var city = $('#cityInput').val().replace(",","").replace(" ","")
-    var jsonUrl = "/crave/searchDishes.json?city=" + city +  "&dish=" + dish
-
-    $.getJSON(jsonUrl, function(data) {
-
-      //console.log(data);
-
-      var reviews = data.map(function (review) {
-
-        var item = '<li><div id="' + review.businessid + '"></div>';
-         item += '<div>Crave Score: ' + review.avgrating + '</div>';
-         item += '<div>' + review.dishnumreviews + ' reviews</div>';
-         item += '<div class="promo">' + review.promotext + '</div>';
-         item += '<div class="restaurant"><a href="restaurant.html?city=' + city +'&id=' + review.businessid +'">Name: ' + review.name + '</a></div>';
-         item += '<div>Address: ' + review.address + '</div>';
-         item += '<div>Yelp reviews: ' + review.restaurantnumreviews + '</div>';
-         item += '<div>Yelp stars: ' + review.stars + '</div>';
-         item += '</div></li>';
-        $("#recommendations ul").append(item);
-      });
-//"businessid","avgrating","numreviews","promoscore", "promotext", "totalscore"
-      //recommendations.empty();
-
-      if (reviews.length) {
-        $('#recommendations').show();
-        $("#searchTerm").text(dish);
-        $("#numResults").text(reviews.length);
-        //$("#recommendations").css("display", "block");
-      }
-    });
-
-    return false;
-
+  $('#dishInput').keyup(function(event){
+    if(event.keyCode == 13){
+        loadRecommendations();
+    }
   });
+
 });
 
 </script>

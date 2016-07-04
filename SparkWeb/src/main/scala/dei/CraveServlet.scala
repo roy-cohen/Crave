@@ -17,7 +17,7 @@ import scala.collection.JavaConversions._
 
 class CraveServlet extends ScalatraServlet with JacksonJsonSupport {
   protected implicit val jsonFormats: Formats = DefaultFormats
-  case class DataPoint(dish: String, businessid: String, avgrating: Double, dishnumreviews: Integer, promotext:String, address:String, name:String, restaurantnumreviews:Int, stars:Double) extends java.io.Serializable
+  case class DataPoint(dish: String, businessid: String, avgrating: String, dishnumreviews: Integer, promotext:String, address:String, name:String, restaurantnumreviews:Int, stars:Double) extends java.io.Serializable
   case class BusinessObj(id: String, address: String, name: String, reviewcount: Int, stars: Double)
 
   val conf = new SparkConf(true).
@@ -99,12 +99,16 @@ class CraveServlet extends ScalatraServlet with JacksonJsonSupport {
     businessMap
   }
 
-  def getRecommendations(top5: scala.collection.mutable.Buffer[com.datastax.driver.core.Row], businessMap: scala.collection.mutable.Map[String,BusinessObj]) = {
+  def roundAt(p: Int)(n: Double): Double = { val s = math pow (10, p); (math round n * s) / s }
 
-    val recommendations = top5.map(row => {
+
+  def getRecommendations(top: scala.collection.mutable.Buffer[com.datastax.driver.core.Row], businessMap: scala.collection.mutable.Map[String,BusinessObj]) = {
+
+    val recommendations = top.map(row => {
       val dish = row.getString("dish")
       val id = row.getString("businessid")
-      val avgrating = row.getDouble("avgrating")
+      val tmp = row.getDouble("avgrating")
+      val avgrating : String = f"$tmp%1.1f";
       val dishnumreviews = row.getInt("numreviews")
       val promotext = row.getString("promotext")
       val address = businessMap(id).address
@@ -125,9 +129,9 @@ class CraveServlet extends ScalatraServlet with JacksonJsonSupport {
       val reviews = session.execute("SELECT dish, businessid, avgrating, numreviews, promotext FROM dishes_db.dishes WHERE citystate = ? AND dish IN (" + dishes +")", citystate)
       val rows = reviews.all
 
-      val top5 = rows.sortBy(row => -row.getDouble("avgrating")).take(5)
+      val top = rows.sortBy(row => -row.getDouble("avgrating")).take(4)
 
-      val businessids = top5.map(row => row.getString("businessid")).mkString("'", "','", "'")
+      val businessids = top.map(row => row.getString("businessid")).mkString("'", "','", "'")
       val businesses = session.execute("SELECT businessid, full_address, name, reviewcount, stars FROM dishes_db.businesses WHERE citystate = ? AND businessid IN (" + businessids + ")", citystate)
       val bRows = businesses.all
 
@@ -135,7 +139,7 @@ class CraveServlet extends ScalatraServlet with JacksonJsonSupport {
       session.close
 
       val businessMap = getBusinessMap(bRows)
-      val recommendations = getRecommendations(top5, businessMap)
+      val recommendations = getRecommendations(top, businessMap)
       recommendations
   }
 
@@ -146,9 +150,9 @@ class CraveServlet extends ScalatraServlet with JacksonJsonSupport {
     val reviews = session.execute("SELECT dish, businessid, avgrating, numreviews, promotext FROM dishes_db.dishes WHERE citystate = ?", citystate)
     val rows = reviews.all
 
-    val top5 = rows.sortBy(row => -row.getDouble("avgrating")).take(5)
+    val top = rows.sortBy(row => -row.getDouble("avgrating")).take(3)
 
-    val businessids = top5.map(row => row.getString("businessid")).mkString("'","','","'")
+    val businessids = top.map(row => row.getString("businessid")).mkString("'","','","'")
     val businesses = session.execute("SELECT businessid, full_address, name, reviewcount, stars FROM dishes_db.businesses WHERE citystate = ? AND businessid IN (" + businessids + ")", citystate)
     val bRows = businesses.all
 
@@ -156,7 +160,7 @@ class CraveServlet extends ScalatraServlet with JacksonJsonSupport {
     session.close
 
     val businessMap = getBusinessMap(bRows)
-    val recommendations = getRecommendations(top5, businessMap)
+    val recommendations = getRecommendations(top, businessMap)
     recommendations
   }
 
@@ -167,7 +171,7 @@ class CraveServlet extends ScalatraServlet with JacksonJsonSupport {
     val reviews = session.execute("SELECT dish, businessid, avgrating, numreviews, promotext FROM dishes_db.dishes WHERE citystate = ? AND businessid = ?", citystate, businessid)
     val rows = reviews.all
 
-    val top5 = rows.sortBy(row => -row.getDouble("avgrating")).take(5)
+    val top = rows.sortBy(row => -row.getDouble("avgrating")).take(3)
 
     val businesses = session.execute("SELECT businessid, full_address, name, reviewcount, stars FROM dishes_db.businesses WHERE citystate = ? AND businessid = ?", citystate, businessid)
     val bRows = businesses.all
@@ -176,7 +180,7 @@ class CraveServlet extends ScalatraServlet with JacksonJsonSupport {
     session.close
 
     val businessMap = getBusinessMap(bRows)
-    val recommendations = getRecommendations(top5, businessMap)
+    val recommendations = getRecommendations(top, businessMap)
     recommendations
   }
 

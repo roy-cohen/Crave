@@ -1,0 +1,306 @@
+#main-container{
+    background-image: url("http://localhost:8089/bg2.png");
+    height: 668px;
+    width: 375px;
+}
+
+.results-container{
+    background-image: url("http://localhost:8089/bgresults.png");
+    height: 668px;
+    width: 375px;
+}
+
+.restaurant-container{
+    background-image: url("http://localhost:8089/bgrestaurant.png");
+    height: 668px;
+    width: 375px;
+}
+
+.promo{
+    font-style: italic;
+    opacity: .5;
+}
+
+#recommendations ul{
+    list-style-type: none;
+    padding-left:4px;
+}
+
+#trends ul{
+    list-style-type: none;
+    padding-left:4px;
+}
+
+#searchTerm{
+    display:inline;
+}
+
+#inputDiv{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 157px;
+    width: 265px;
+}
+
+.inputText{
+    width:265px;
+    height:38px;
+    border-radius: 5px;
+    border: 0px;
+    text-indent: 41px;
+    background-repeat: no-repeat;
+    background-position-y: 0px;
+}
+
+#cityInput{
+    background-image: url("http://localhost:8089/locationbar.png");
+}
+
+#dishInput{
+    background-image: url("http://localhost:8089/dishbar.png");
+}
+
+input::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+
+#trends {
+    color: #FF0082;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 141px;
+    width: 335px;
+}
+
+#trends hr{
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #FF0082;
+    margin: 1em 0;
+    padding: 0;
+}
+
+#trendHdr{
+    font-size:20px;
+    padding-left:10px;
+    letter-spacing: 1.5px;
+}
+
+.trendListing{
+    margin-bottom:26px;
+}
+
+.trendDish{
+    font-size:15px;
+    font-weight: bold;
+    color: #FF0082;
+}
+
+.trendRestName{
+    font-size:14px;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+.trendRestName a{
+    font-size:13px;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+.trendRestName a:hover{
+    color: #CFCFCF;
+    text-decoration-line: none;
+}
+
+.trendPromo{
+    font-size:14px;
+    color: #FFFFFF;
+    font-weight:300;
+    margin-top: 3px;
+}
+
+#recommendations {
+    color: #FF0082;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 36px;
+    width: 335px;
+}
+
+#recommendations li{
+    margin-top:0px;
+    margin-bottom:25px;
+}
+
+#recommendations hr{
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid grey;
+    margin: 1em 0;
+    padding: 0;
+}
+
+.reccDish{
+    font-size:16px;
+    font-weight: bold;
+    color: #FF0082;
+    display: inline;
+}
+
+.reccRestName{
+    font-size:14px;
+    font-weight: bold;
+    color: #CFCFCF;
+}
+
+.reccRestName a{
+    font-size:13px;
+    font-weight: bold;
+    color: #CFCFCF;
+}
+
+.reccRestName a:hover{
+    color: #FFFFFF;
+    text-decoration-line: none;
+}
+
+.reccPromo{
+    font-size:14px;
+    color: #CFCFCF;
+}
+
+.reccScoreDiv{
+    float:right;
+    padding-right: 4px;
+    margin-top: 14px;
+}
+
+.reccScore{
+    font-size:18px;
+    font-weight: bold;
+    color: FF0082;
+    display: inline;
+}
+
+.reccScoreImg{
+    margin-right: 4px;
+    padding-bottom:6px;
+}
+
+#restaurantInfo{
+    /*position: relative;
+    /* center the element
+    right: 0;
+    left: 0;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 55px;
+    width:55%;*/
+    max-width:275px;
+    margin-top: 60px;
+}
+
+#restaurantName{
+    font-size:20px;
+    font-weight:bold;
+    color: #4F4F4F
+}
+
+#restaurantAddr{
+    font-size:14px;
+}
+
+.restDish {
+    font-weight: bold;
+    font-size:16px;
+}
+
+.restPromo{
+    font-size:13px;
+    color: black;
+    width: 265px;
+}
+
+.restScoreDiv{
+    float:right;
+    padding-right: 4px;
+    margin-top: -12px;
+}
+
+.restScore{
+    font-size:18px;
+    font-weight: bold;
+    color: FF0082;
+    display: inline;
+}
+
+.restScoreImg{
+    margin-right: 4px;
+    padding-bottom:6px;
+}
+
+#restaurantRecc {
+    color: #FF0082;
+    margin-top: 50px;
+    width: 335px;
+    padding-left:15px;
+}
+
+#restaurantRecc hr{
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #CFCFCF;
+    margin: 2em 0;
+    padding: 0;
+}
+#restaurantRecc ul{
+    list-style-type: none;
+    padding-left:4px;
+}
+
+#restLogo {
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+#restLogo img{
+    height:132px;
+    width:132px;
+}
+
+#yelpDiv{
+    margin-top: 10px;
+}
+
+#yelpLogo{
+    display:inline;
+}
+
+#yelpLogo img{
+    height:35px;
+    width:35px;
+    margin-right: 10px;
+}
+
+#yelpStars{
+    font-size: 14px;
+    display:inline;
+}
+
+#yelpStarImg{
+    height:14px;
+    width:14px;
+    margin-bottom: 3px;
+    margin-left: 3px;
+    margin-right: 10px;
+}
+
+#yelpReviews{
+    font-size: 14px;
+    display:inline;
+}

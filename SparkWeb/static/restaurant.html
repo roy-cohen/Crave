@@ -7,6 +7,8 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="http://localhost:8089/style.css">
+
     <title>Crave</title>
 </head>
 
@@ -19,28 +21,41 @@
 <body >
 
 
-<div class="container-fluid">
+<div class="container-fluid restaurant-container">
 
     <div class="row">
+        <!--<div class="col-md-4" >-->
+
+        <!--</div>-->
         <div class="col-md-4" >
 
-        </div>
-        <div class="col-md-4" >
-            <h1>Crave</h1><br />
             <fieldset>
-                <legend></legend>
-                <div id="recommendations" style="display:none">
-                    Top <span id="numResults"></span> dishes for <div id="searchTerm" style="display:inline"></div>:
+                <!--<legend></legend>-->
+                <center>
+                <div id="restaurantInfo">
+                    <div id="restaurantName"></div>
+                    <div id="restLogo"><img src="http://localhost:8089/restlogo.png"></div>
+                    <div id="restaurantAddr"></div>
+                    <div id="yelpDiv">
+                        <div id="yelpLogo"><img src="http://localhost:8089/yelp.png"></div>
+                        <div id="yelpStars"></div><img id="yelpStarImg" src="http://localhost:8089/yelpstar.png">
+                        <div id="yelpReviews"></div>
+                    </div>
+                </div>
+                </center>
+                <div id="restaurantRecc">
+
+                    <!--Top <span id="numResults"></span> dishes for <div id="searchTerm" style="display:inline"></div>:-->
                     <ul></ul>
                 </div>
             </fieldset>
 
-            <legend></legend>
+            <!--<legend></legend>-->
 
 
             </fieldset>
         </div>
-        <div class="col-md-4" style="background-color:lightblue;">
+        <!--<div class="col-md-4" >-->
 
         </div>
     </div>
@@ -81,6 +96,8 @@ $(document).ready(function () {
       var address = "";
       var yelpreviewcount = 0;
       var yelpstars = 0;
+      var lastHR = "";
+
       var reviews = data.map(function (review) {
 
         restaurantName = review.name;
@@ -88,22 +105,37 @@ $(document).ready(function () {
         yelpreviewcount = review.restaurantnumreviews;
         yelpstars = review.stars;
 
-        var item = '<li><div id="' + review.businessid + '">';
-         item += 'Dish: ' + review.dish;
-         item += '<br>Crave Score: ' + review.avgrating;
-         item += '<br>Number of reviews for this dish: ' + review.dishnumreviews;
-         item += '<br>Promo text: ' + review.promotext;
-         item += '</div></li>';
-        $("#recommendations ul").append(item);
+        var promoShort = '"' + review.promotext.substring(0,36) + '..."';
+        var item = '<li>';
+         <!--item += '<div id="' + review.businessid + '"></div>';-->
+         item += '<div class="restDish">' + review.dish + '</div>';
+         <!--item += '<div class="restScore">' + review.avgrating + '</div>';-->
+
+         item += '<div class="restScoreDiv"><img class="restScoreImg" src="http://localhost:8089/score.png" /><div class="restScore">' + review.avgrating + '</div></div>';
+         item += '<div class="restPromo">' + promoShort + '</div>';
+
+         <!--item += '<div>' + review.dishnumreviews + ' reviews</div>';-->
+         <!--item += '<div>Yelp reviews: ' + review.restaurantnumreviews + '</div>';-->
+         <!--item += '<div>' + review.stars + '<img src="http://localhost:8089/yelpstars.png"></div>';-->
+
+         item += '<hr id="hr' + review.dish + '"></div></li>';
+        $("#restaurantRecc ul").append(item);
+
+        lastHR = "#hr" + review.dish;
       });
+
+      $(lastHR).hide();
 
       //recommendations.empty();
 
       if (reviews.length) {
-        $('#recommendations').show();
+        $('#restaurantRecc').show();
         $("#searchTerm").text(restaurantName);
         $("#numResults").text(reviews.length);
-        //$("#recommendations").css("display", "block");
+        $('#restaurantName').text(restaurantName);
+        $('#restaurantAddr').text(address);
+        $('#yelpStars').text(yelpstars);
+        $('#yelpReviews').text(yelpreviewcount + " reviews");
       }
 
   });
