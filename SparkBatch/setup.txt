@@ -1,0 +1,65 @@
+1. start EMR cluster with Spark 1.6.2  
+    a. 1 master, 19 nodes m4.4xlarge 16 cores, 64 GB RAM per node
+    b. enter configuration to set hadoop and spark jre
+    EMR installation (switch environment to java 1.8)[{"Classification": "hadoop-env", "Configurations":[{"Classification": "export", "Configurations": [], "Properties": {"JAVA_HOME": "/usr/lib/jvm/java-1.8.0"}}], "Properties": {}}, {"Classification": "spark-env", "Configurations": [{"Classification": "export", "Configurations": [], "Properties": {"JAVA_HOME": "/usr/lib/jvm/java-1.8.0"}}], "Properties": {}}]
+    c. add bootstrap action, ./emr_bootstrap_java_8.sh to set all nodes to use java 8 by default (not sure if this actually works, but I still did it)
+
+2. make necessary security configurations so slaves and master can talk to each other (for cassandra ports as well)
+3. copy stanford-english-corenlp-2016-01-10-models.jar and guava-16.0.1.jar to master node
+4. install cassandra on master node
+    download tz file and unzip 
+    open ports on main cluster
+        7199 - JMX (was 8080 pre Cassandra 0.8.xx)
+        7000 - Internode communication (not used if TLS enabled)
+        7001 - TLS Internode communication (used if TLS enabled)
+        9160 - Thrift client API
+        9042 - CQL native transport port
+    modify cassandra.yaml file. Set listen_address, rpc_address, and seed provider to master internal ip address
+5. switch to jre 1.8
+    sudo /usr/sbin/alternatives --config java (then enter 2)
+6. start cassandra (with internal ip address)
+7. run cqlsh and build db schema
+8. modify yarn-site.xml, set yarn.nodemanager.resource.memory-mb to 64512 and yarn.nodemanager.resource.cpu-vcores to 15,
+    for some reason, the yarn.nodemanager.resource.memory-mb was set 57,344 which is 56GB, but we want 63GB to take advantage of the full memory 
+9. install tmux 
+    sudo yum install tmux
+10. set packages
+
+PKGS=edu.stanford.nlp:stanford-corenlp:3.6.0
+PKGS=$PKGS,edu.stanford.nlp:stanford-parser:3.6.0 
+PKGS=$PKGS,com.datastax.spark:spark-cassandra-connector_2.10:1.6.0-M2
+PKGS=$PKGS,com.datastax.cassandra:cassandra-driver-core:3.0.2
+PKGS=$PKGS,com.google.protobuf:protobuf-java:2.6.1
+
+11. start shell
+spark-shell --master yarn    --packages $PKGS   --jars stanford-english-corenlp-2016-01-10-models.jar --conf "spark.cassandra.connection.host=172.31.52.167" --executor-memory 19G  --executor-cores 5 --num-executors 56 --files guava-16.0.1.jar --conf spark.executor.extraClassPath=guava-16.0.1.jar:/etc/hadoop/conf:/usr/lib/hadoop-lzo/lib/*:/usr/share/aws/aws-java-sdk/*:/usr/share/aws/emr/emrfs/conf:/usr/share/aws/emr/emrfs/lib/*:/usr/share/aws/emr/emrfs/auxlib/*
+
+We want to use 15 cores and 63GB on each node (leave each node 1GB and 1 core to run the OS and Hadoop daemons)
+
+Per http://blog.cloudera.com/blog/2015/03/how-to-tune-your-apache-spark-jobs-part-2/:
+"I’ve noticed that the HDFS client has trouble with tons of concurrent threads. A rough guess is that at most five tasks per executor can achieve full write throughput, so it’s good to keep the number of cores per executor below that number."
+
+Set executor-cores to 5 - which means 5 cores per executor
+Set num-executors to 56 - 
+    3 executors per node (since we have 15 cores per node and each executor uses 5 cores) * 19 = 57 executors
+    subtract 1 because application master will only have 2 executors  57 - 1 = 56 executors
+Set executor memory to 19GB - 
+    we have 63GB per node
+    63/3 executors = 21GB per executor
+    spark.yarn.executor.memoryOverhead takes 7% of executor memory: 21 * 0.07 = 1.47 21 - 1.57 ~ 19GB per executor
+
+
+12. Backup and restore one node cassandra db on another machine:
+    https://docs.datastax.com/en/cassandra/2.0/cassandra/operations/ops_backup_takes_snapshot_t.html
+
+    On existing Cassandra node run:
+    nodetool -h localhost -p 7199 snapshot dishes_db
+
+    Install Cassandra on target machine and follow restore instructions:
+    https://docs.datastax.com/en/cassandra/2.0/cassandra/operations/ops_backup_snapshot_restore_t.html 
+
+    start cassandra and build schema
+    copy contents of snapshot into keyspace_name/table_name directories
+
+    use the following command to rebuild secondary index:
+    nodetool -h localhost rebuild_index dishes_db dishes dishes_businessid_idx

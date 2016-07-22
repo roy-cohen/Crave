@@ -43,3 +43,12 @@ KafkaProducer/.idea
 KafkaProducer/target
 KafkaConsumer/.idea
 KafkaConsumer/checkpoint
+cassandra
+intermediate
+SparkBatch/src/META-INF
+SparkWeb/src/main/scala/META-INF
+SparkBatch/classes
+datasets
+crave_key.key
+A2-RoyCohen.key
+SparkBatch/jars

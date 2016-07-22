@@ -1,0 +1,186 @@
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<String> future = executor.submit(new Task());
+
+        try {
+            System.out.println("Started..");
+            System.out.println(future.get(3, TimeUnit.SECONDS));
+            System.out.println("Finished!");
+        } catch (TimeoutException e) {
+            future.cancel(true);
+            System.out.println("Terminated!");
+        }
+
+        executor.shutdownNow();
+    }
+
+
+
+import scala.collection.JavaConversions._
+
+class Task extends java.util.concurrent.Callable[String] {
+
+  override def call(): String = {
+    println("doing sentiment analysis on")
+    println(sentenceWithItem)
+    val scoreArray = coreNLP.process(sentenceWithItem).
+                        get(classOf[edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation]).
+                        map(_.get(classOf[SentimentCoreAnnotations.SentimentAnnotatedTree])).
+                        map(RNNCoreAnnotations.getPredictedClass(_))
+    score = scoreArray(0) + 1
+    score.toString
+  }
+}
+
+def doSentiment() = {
+    val executor = Executors.newSingleThreadExecutor()
+    val future = executor.submit(new Task())
+    try {
+      println("Started..")
+      println(future.get(3, java.util.concurrent.TimeUnit.SECONDS))
+      println("Finished!")
+    } catch {
+      case e: java.util.concurrent.TimeoutException => {
+        future.cancel(true)
+        println("Terminated!")
+        score = -1;
+      }
+    }
+    executor.shutdownNow()
+    println("Executor shut down!")
+  }
+
+  :paste
+  var score = 0;
+  doSentiment()
+  println("score=" + score)
+
+
+
+import scala.concurrent._
+import scala.concurrent.duration._
+import ExecutionContext.Implicits.global
+ 
+lazy val f = future { Thread.sleep(2000); true }
+Await.result(f, 1 second)
+
+val props = new Properties()
+props.put("annotators", "tokenize, ssplit, pos, parse, sentiment")
+val wrapper = new StanfordCoreNLPWrapper(props)
+val coreNLP = wrapper.get
+
+def getScore (sentenceWithItem: String): Integer = { 
+    try {
+    val scoreArray = coreNLP.process(sentenceWithItem).
+                    get(classOf[CoreAnnotations.SentencesAnnotation]).
+                    map(_.get(classOf[SentimentCoreAnnotations.SentimentAnnotatedTree])).
+                    map(RNNCoreAnnotations.getPredictedClass(_))
+                  scoreArray(0) + 1
+    }catch{
+            case ex: TimeoutException => -4
+            case ex: OutOfMemoryError => -3
+            case ex: InterruptedException => -2
+            case ex: Throwable => -1
+    }
+}
+
+import scala.concurrent._
+import scala.concurrent.duration._
+import ExecutionContext.Implicits.global
+ 
+lazy val f = future { val score = getScore(sentence); score }
+Await.result(f, 1 second)
+
+
+import scala.concurrent._
+import ExecutionContext.Implicits.global
+val sentence = ""
+val f = Future {
+  getScore(sentence)
+}
+
+f onComplete {
+  case Success(returnVal) => returnVal
+  case Failure(ex) => println("Could not process this sentence: " + sentence + "\nAn error has occured: " + ex.getMessage); -1
+}
+
+
+lazy val f = future { getScore(sentence);  }
+lazy val t = after(duration = 1 second, using = system.scheduler)(Future.failed(new TimeoutException("Future timed out!")))
+ 
+val fWithTimeout = Future firstCompletedOf Seq(f, t)
+ 
+fWithTimeout.onComplete {
+   case Success(score) => score
+   case Failure(ex) => println("Could not process this sentence: " + sentence + "\nAn error has occured: " + ex.getMessage))
+}
+
+Await.result(purchase, 1 second)
+
+
+val sentence = ""
+lazy val f = future { getScore(sentence);  }
+lazy val t = after(duration = 1 second, using = akka.actor.ActorSystem().scheduler )(Future.failed(new TimeoutException("Future timed out!")))
+val fWithTimeout = Future firstCompletedOf Seq(f, t)
+fWithTimeout.onComplete {
+   case Success(score) => println(score)
+   case Failure(ex) => println("Could not process this sentence: " + sentence + "\nAn error has occured: " + ex.getMessage)
+}
+
+
+import scala.concurrent._
+import scala.concurrent.duration._
+import ExecutionContext.Implicits.global
+ 
+
+var score = 0
+
+val thread = new Thread {
+    override def run {
+        try{
+    lazy val f = future { getScore(sentence) }
+
+    f onSuccess {
+        case x => score = x
+    }
+    f onFailure {
+        case x => score = -3
+    }
+
+    Await.result(f, 1 second)       
+}
+catch {
+    case ex: TimeoutException => score = -1
+    case _: Throwable => score = -2
+}
+    }
+}
+thread.start
+score
+
+
+
+
+
+
+val props = new Properties()
+//props.put("annotators", "tokenize, ssplit, pos, lemma, parse, sentiment")
+props.put("annotators", "tokenize, ssplit, pos, parse, sentiment")
+
+val wrapper = new StanfordCoreNLPWrapper(props)
+val coreNLP = wrapper.get
+
+val doc = new Document(sentence)
+
+val scoreArray = coreNLP.process(sentence).
+                    get(classOf[CoreAnnotations.SentencesAnnotation]).
+                    map(_.get(classOf[SentimentCoreAnnotations.SentimentAnnotatedTree])).
+                    map(RNNCoreAnnotations.getPredictedClass(_))
+                  val score = scoreArray(0) + 1
+score
