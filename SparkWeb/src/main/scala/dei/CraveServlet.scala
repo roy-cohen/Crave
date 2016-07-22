@@ -19,6 +19,7 @@ class CraveServlet extends ScalatraServlet with JacksonJsonSupport {
   protected implicit val jsonFormats: Formats = DefaultFormats
   case class DataPoint(dish: String, businessid: String, avgrating: String, dishnumreviews: Integer, promotext:String, address:String, name:String, restaurantnumreviews:Int, stars:Double) extends java.io.Serializable
   case class BusinessObj(id: String, address: String, name: String, reviewcount: Int, stars: Double)
+  case class City(citystate: String)
 
   val conf = new SparkConf(true).
     set("spark.cassandra.connection.host", "127.0.0.1").
@@ -51,8 +52,8 @@ class CraveServlet extends ScalatraServlet with JacksonJsonSupport {
   }
 
   get("/cities.json") {
-    val file = System.getProperty("user.dir") + "/static/cities.json"
-    val cities = scala.io.Source.fromFile(file).getLines.mkString
+    //val file = System.getProperty("user.dir") + "/static/cities.json"
+    val cities = getCities()
     cities
   }
 
@@ -141,6 +142,27 @@ class CraveServlet extends ScalatraServlet with JacksonJsonSupport {
       val businessMap = getBusinessMap(bRows)
       val recommendations = getRecommendations(top, businessMap)
       recommendations
+  }
+
+  def getCities() = {
+
+    val session = connector.openSession
+
+    val rows = session.execute("SELECT distinct citystate FROM dishes_db.dishes")
+    val citystates = rows.all
+
+    val cities = citystates.sortBy(row => row.getString("citystate")).map(row => {
+      val citystate = row.getString("citystate")
+      val index = citystate.length() - 2
+      val city = citystate.substring(0, index)
+      val state = citystate.substring(index)
+
+      city + ", " + state
+    }).toList
+    // Close session
+    session.close
+
+    cities
   }
 
   def getTopDishesByCity(citystate:String) = {
