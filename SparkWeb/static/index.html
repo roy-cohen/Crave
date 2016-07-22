@@ -63,7 +63,6 @@ function loadTrends() {
 
     $('#trends ul').empty();
 
-    $('#cityInput').val("Homestead, PA")
     var city = $('#cityInput').val().replace(",","").replace(" ","");
 
     var jsonUrl = "/crave/getTopDishesByCity.json?city=" + city;
@@ -72,7 +71,29 @@ function loadTrends() {
 
       var reviews = data.map(function (review) {
 
-        var promoShort = '"' + review.promotext.substring(0,45) + '..."';
+        var promoShort = review.promotext;
+        if (review.promotext.length > 36){
+            var dishIndex = review.promotext.indexOf(review.dish);
+            var startIndex = dishIndex - 18 < 0 ? 0 : dishIndex - 18;
+            var endIndex = dishIndex + 18 > review.promotext.length ? review.promotext.length : dishIndex + 18;
+
+            promoShort = '"' + review.promotext.substring(startIndex,dishIndex);
+            promoShort += '<span class="trendPromoDish">' + review.dish + '</span>';
+            promoShort += review.promotext.substring(dishIndex + review.dish.length, endIndex);
+            if (endIndex != review.promotext.length){
+                promoShort += '...';
+            }
+            promoShort += '"';
+        }else{
+            var dishIndex = review.promotext.indexOf(review.dish);
+            var startIndex = 0;
+            var endIndex = review.promotext.length;
+            promoShort = '"' + review.promotext.substring(startIndex,dishIndex);
+            promoShort += '<span class="trendPromoDish">' + review.dish + '</span>';
+            promoShort += review.promotext.substring(dishIndex + review.dish.length, endIndex);
+            promoShort += '"';
+        }
+
         var item = '<li><div class="trendListing" id="' + review.businessid + '">';
          item += '<span class="trendDish">' + review.dish + '</span><span class="trendRestName"> - <a href="restaurant.html?city=' + city +'&id=' + review.businessid +'">' + review.name +'</a></span>';
          <!--item += '<div>Crave Score: ' + review.avgrating + '</div>';-->
@@ -107,7 +128,29 @@ function loadRecommendations() {
 
       var reviews = data.map(function (review) {
 
-        var promoShort = '"' + review.promotext.substring(0,35) + '..."';
+        var promoShort = review.promotext;
+        if (review.promotext.length > 36){
+            var dishIndex = review.promotext.indexOf(review.dish);
+            var startIndex = dishIndex - 18 < 0 ? 0 : dishIndex - 18;
+            var endIndex = dishIndex + 18 > review.promotext.length ? review.promotext.length : dishIndex + 18;
+
+            promoShort = '"' + review.promotext.substring(startIndex,dishIndex);
+            promoShort += '<span class="searchPromoDish">' + review.dish + '</span>';
+            promoShort += review.promotext.substring(dishIndex + review.dish.length, endIndex);
+            if (endIndex != review.promotext.length){
+                promoShort += '...';
+            }
+            promoShort += '"';
+        }else{
+            var dishIndex = review.promotext.indexOf(review.dish);
+            var startIndex = 0;
+            var endIndex = review.promotext.length;
+            promoShort = '"' + review.promotext.substring(startIndex,dishIndex);
+            promoShort += '<span class="searchPromoDish">' + review.dish + '</span>';
+            promoShort += review.promotext.substring(dishIndex + review.dish.length, endIndex);
+            promoShort += '"';
+        }
+
         var item = '<li>';
          <!--item += '<div id="' + review.businessid + '"></div>';-->
          item += '<div class="reccDish">' + review.dish + '</div>';
@@ -200,11 +243,18 @@ $(document).ready(function () {
     loadList(dataList, input, placeHolder, error, file);
 
     //load trends
+    $('#cityInput').val("Charlotte, NC")
     loadTrends();
 
   $('#dishInput').keyup(function(event){
     if(event.keyCode == 13){
         loadRecommendations();
+    }
+  });
+
+  $('#cityInput').keyup(function(event){
+    if(event.keyCode == 13){
+        loadTrends();
     }
   });
 

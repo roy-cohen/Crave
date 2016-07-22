@@ -105,7 +105,29 @@ $(document).ready(function () {
         yelpreviewcount = review.restaurantnumreviews;
         yelpstars = review.stars;
 
-        var promoShort = '"' + review.promotext.substring(0,36) + '..."';
+        var promoShort = review.promotext;
+        if (review.promotext.length > 36){
+            var dishIndex = review.promotext.indexOf(review.dish);
+            var startIndex = dishIndex - 18 < 0 ? 0 : dishIndex - 18;
+            var endIndex = dishIndex + 18 > review.promotext.length ? review.promotext.length : dishIndex + 18;
+
+            promoShort = '"' + review.promotext.substring(startIndex,dishIndex);
+            promoShort += '<span class="restPromoDish">' + review.dish + '</span>';
+            promoShort += review.promotext.substring(dishIndex + review.dish.length, endIndex);
+            if (endIndex != review.promotext.length){
+                promoShort += '...';
+            }
+            promoShort += '"';
+        }else{
+            var dishIndex = review.promotext.indexOf(review.dish);
+            var startIndex = 0;
+            var endIndex = review.promotext.length;
+            promoShort = '"' + review.promotext.substring(startIndex,dishIndex);
+            promoShort += '<span class="restPromoDish">' + review.dish + '</span>';
+            promoShort += review.promotext.substring(dishIndex + review.dish.length, endIndex);
+            promoShort += '"';
+        }
+
         var item = '<li>';
          <!--item += '<div id="' + review.businessid + '"></div>';-->
          item += '<div class="restDish">' + review.dish + '</div>';

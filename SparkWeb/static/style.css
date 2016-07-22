@@ -304,3 +304,18 @@ input::-webkit-calendar-picker-indicator {
     font-size: 14px;
     display:inline;
 }
+
+.searchPromoDish{
+    color:white;
+    font-weight: bold;
+}
+
+.trendPromoDish{
+    color:white;
+    font-weight: bold;
+}
+
+.restPromoDish{
+    color:black;
+    font-weight: bold;
+}
