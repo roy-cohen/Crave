@@ -1,17 +1,17 @@
 package dei
 
-/**
-  * Created by roycohen on 6/25/16.
-  */
-class ItemsAndCategories {
+import org.apache.spark.SparkContext
 
-  def readCategoriesAndItems(fileName: String,
-                             categoryItems: collection.mutable.Map[String, collection.mutable.Set[String]],
+class ItemsAndCategories (sc: SparkContext){
+
+  val dishesTextFile = "s3://roy-data/dishes.txt"
+
+  def readCategoriesAndItems(categoryItems: collection.mutable.Map[String, collection.mutable.Set[String]],
                              items: collection.mutable.Set[String]) = {
 
-    val source = scala.io.Source.fromFile(fileName);
+    val source = sc.textFile(dishesTextFile);
 
-    for (line <- source.getLines) {
+    source.collect.map(line => {
 
       val tokens = line.split(":");
       val categoryLine = tokens(0);
@@ -21,12 +21,12 @@ class ItemsAndCategories {
 
       val categories = categoryLine.split('|');
 
-      categories.foreach(category => {
+      categories.map(category => {
 
         val itemSet = categoryItems.getOrElse(category, collection.mutable.Set[String]());
         itemSet.add(item);
         categoryItems.put(category, itemSet);
       })
-    }
+    })
   }
 }
