@@ -72,10 +72,10 @@ function loadTrends() {
       var reviews = data.map(function (review) {
 
         var promoShort = review.promotext;
-        if (review.promotext.length > 36){
+        if (review.promotext.length > 46){
             var dishIndex = review.promotext.indexOf(review.dish);
-            var startIndex = dishIndex - 18 < 0 ? 0 : dishIndex - 18;
-            var endIndex = dishIndex + 18 > review.promotext.length ? review.promotext.length : dishIndex + 18;
+            var startIndex = dishIndex - 23 < 0 ? 0 : dishIndex - 23;
+            var endIndex = dishIndex + 23 > review.promotext.length ? review.promotext.length : dishIndex + 23;
 
             promoShort = '"' + review.promotext.substring(startIndex,dishIndex);
             promoShort += '<span class="trendPromoDish">' + review.dish + '</span>';
