@@ -172,8 +172,8 @@ class CraveServlet extends ScalatraServlet with JacksonJsonSupport {
 
     val session = connector.openSession
 
-    val reviews = session.execute("SELECT dish, businessid, avgrating, numreviews, promotext FROM dishes_db.dishes WHERE citystate = ?", citystate)
-    val top = getRecommendations(reviews.all).take(3)
+    val reviews = session.execute("SELECT dish, businessid, avgrating, numreviews, promotext FROM dishes_db.trends WHERE citystate = ?", citystate)
+    val top = reviews.all().map( review => (review.getDouble("avgrating"), review)).take(3)
 
     val businessids = top.map{case(score,row) => row.getString("businessid")}.mkString("'","','","'")
     val businesses = session.execute("SELECT businessid, full_address, name, reviewcount, stars FROM dishes_db.businesses WHERE citystate = ? AND businessid IN (" + businessids + ")", citystate)

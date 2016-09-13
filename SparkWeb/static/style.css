@@ -2,6 +2,7 @@
     background-image: url("http://localhost:8089/bg2.png");
     height: 668px;
     width: 375px;
+    margin-top: 13px;
 }
 
 .results-container{
@@ -14,6 +15,7 @@
     background-image: url("http://localhost:8089/bgrestaurant.png");
     height: 668px;
     width: 375px;
+    margin-top: 13px;
 }
 
 .promo{
