@@ -1,0 +1,7 @@
+kafka
+from kafka folder, start zookeper
+/usr/local/lib/kafka_2.10-0.8.2.1/bin/zookeeper-server-start.sh config/zookeeper.properties
+start kafka server
+./bin/kafka-server-start.sh config/server.properties
+run kafka consumer
+run kafka producer

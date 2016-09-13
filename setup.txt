@@ -1,6 +1,6 @@
 1. start EMR cluster with Spark 1.6.2  
     a. 1 master, 19 nodes m4.4xlarge 16 cores, 64 GB RAM per node
-    b. enter configuration to set hadoop and spark jre
+    b. enter configuration to set hadoop and spark jre environments
     EMR installation (switch environment to java 1.8)[{"Classification": "hadoop-env", "Configurations":[{"Classification": "export", "Configurations": [], "Properties": {"JAVA_HOME": "/usr/lib/jvm/java-1.8.0"}}], "Properties": {}}, {"Classification": "spark-env", "Configurations": [{"Classification": "export", "Configurations": [], "Properties": {"JAVA_HOME": "/usr/lib/jvm/java-1.8.0"}}], "Properties": {}}]
     c. add bootstrap action, ./emr_bootstrap_java_8.sh to set all nodes to use java 8 by default (not sure if this actually works, but I still did it)
 
@@ -46,7 +46,7 @@ Set num-executors to 56 -
 Set executor memory to 19GB - 
     we have 63GB per node
     63/3 executors = 21GB per executor
-    spark.yarn.executor.memoryOverhead takes 7% of executor memory: 21 * 0.07 = 1.47 21 - 1.57 ~ 19GB per executor
+    spark.yarn.executor.memoryOverhead takes 7% of executor memory: 21 * 0.07 = 1.47 21 - 1.47 ~ 19GB per executor
 
 
 12. Backup and restore one node cassandra db on another machine:

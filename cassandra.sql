@@ -35,11 +35,23 @@ CREATE TABLE dishes (
 CREATE INDEX ON dishes (businessid);
 
 
+DROP TABLE IF EXISTS trends;
+CREATE TABLE trends (
+  citystate TEXT,
+  dish TEXT,
+  businessId TEXT,
+  numreviews INT,
+  totalscore INT,
+  avgrating DOUBLE,
+  promotext TEXT,
+  PRIMARY KEY (citystate, dish, businessid)
+);
+
 /*
 Use cases:
 
 1. get best dishes in a city 
-select * from dishes where citystate = 'MunhallPA';
+select * from trends where citystate = 'MunhallPA';
 
 2. get best dishes by dish
 select * from dishes where citystate = 'MunhallPA' and dish = 'burger';
