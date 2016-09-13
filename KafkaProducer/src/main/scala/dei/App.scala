@@ -3,6 +3,7 @@ package dei
 
 
 //import org.apache.spark.{SparkConf, SparkContext}
+import com.datastax.driver.core.Row
 import com.datastax.spark.connector.cql.CassandraConnector
 import org.apache.spark.SparkContext
 //import org.apache.spark.sql.SQLContext._
@@ -36,6 +37,7 @@ object App {
     //    2. read businesses
     val businesses = getBusinesses().toArray
 
+    val reviews = getReviews()
 
     val brokers = "localhost:9092"
     // Zookeeper connection properties
@@ -51,7 +53,8 @@ object App {
     while(true) {
 
         //    3. produce random item, business, score
-        val newreview = getNewReview(dishes, businesses)
+        //val newreview = getNewReview(dishes, businesses)
+        val newreview = getNewReview(reviews)
         val tokens = newreview.split(",")
         val key =  tokens(0) + tokens(1)
 
@@ -83,7 +86,7 @@ object App {
 
     val session = connector.openSession
     val resultSet = session.execute("SELECT businessid, citystate FROM dishes_db.businesses")
-    val rows = resultSet.all
+    val rows = resultSet.all()
 
     // Close session
     session.close
@@ -92,17 +95,44 @@ object App {
     businessids
   }
 
-  def getNewReview(dishes: Array[String], businesses: Array[String]) = {
+  def getReviews() : java.util.List[com.datastax.driver.core.Row] = {
+
+    val session = connector.openSession
+    val resultSet = session.execute("SELECT * FROM dishes_db.dishes LIMIT 1000")
+    val rows = resultSet.all()
+
+    // Close session
+    session.close
+
+    rows
+  }
+
+//  def getNewReview(dishes: Array[String], businesses: Array[String]) = {
+//    val r = scala.util.Random
+//    var index = r.nextInt(dishes.length)
+//    val dish = dishes(index)
+//
+//    index = r.nextInt(businesses.length)
+//    val business = businesses(index)
+//
+//    val score = r.nextInt(5) + 1
+//
+//    val review = dish + "," + business + "," + score.toString
+//    review
+//  }
+
+  def getNewReview(rows : java.util.List[com.datastax.driver.core.Row]) = {
+
     val r = scala.util.Random
-    var index = r.nextInt(dishes.length)
-    val dish = dishes(index)
 
-    index = r.nextInt(businesses.length)
-    val business = businesses(index)
-
+    val index = r.nextInt(rows.size)
+    val business = rows.get(index).getString("businessid")
+    val dish = rows.get(index).getString("dish")
+    val promotext = rows.get(index).getString("promotext")
+    val citystate = rows.get(index).getString("citystate")
     val score = r.nextInt(5) + 1
 
-    val review = dish + "," + business + "," + score.toString
+    val review = dish + "," + business + "," + citystate + "," + score.toString + "," + promotext
     review
   }
 }

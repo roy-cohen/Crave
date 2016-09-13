@@ -107,7 +107,7 @@ prosciutto:prosciutto
 pudding:pudding
 quesadilla:quesadilla
 relleno:relleno
-ribs:ribs	
+ribs:ribs
 rice:biryani
 rice:risotto
 roti:roti
@@ -117,7 +117,7 @@ sandwich:club
 sandwich:hero
 sandwich:hoagie
 sandwich:panini
-sandwich:reuben 
+sandwich:reuben
 sandwich:sandwich
 sandwich:sub
 sandwich:wrap
