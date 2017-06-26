@@ -2,7 +2,7 @@
 
 Search for the food you crave, and get results of the top dishes in your area!  
 
-<br/>
+
 ## Project Summary
 
 Crave is a web based application which incorporates a dish-based rating system and allows a user to search for a specific dish that he/she craves and get results of the top ranked dishes in the user's area based on their search term.
