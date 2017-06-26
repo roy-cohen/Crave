@@ -220,6 +220,7 @@ example output:
 
 </font>
 <img src="https://raw.githubusercontent.com/roy-cohen/Crave/master/images/results.png?" width="280" height="500" />
+
 ***
 
 ##### getTopDishesForRestaurant
